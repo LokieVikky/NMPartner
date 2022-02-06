@@ -1,0 +1,158 @@
+{
+  "project_info": {
+    "project_number": "310807201554",
+    "project_id": "namma-mechanics",
+    "storage_bucket": "namma-mechanics.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310807201554:android:c5a11e9bc78b0f1ca555cb",
+        "android_client_info": {
+          "package_name": "com.example.MechApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310807201554-ujb5r25ksrnp771mtgqfph4gfjju77s2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.MechApp",
+            "certificate_hash": "7a3e26efb242dd020968fe995bc8fb4c139aa1fc"
+          }
+        },
+        {
+          "client_id": "310807201554-8co73mdi66k6v7q19r0heaculps1g3sh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAzjl4X77OJiJlzKe1g4F1_MxFRjfa0C8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "310807201554-8co73mdi66k6v7q19r0heaculps1g3sh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310807201554:android:53e410213a0f567da555cb",
+        "android_client_info": {
+          "package_name": "com.example.MechGesture"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310807201554-a1vb94pi1k6v02amu8c51mqg3f9hp66p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.MechGesture",
+            "certificate_hash": "7a3e26efb242dd020968fe995bc8fb4c139aa1fc"
+          }
+        },
+        {
+          "client_id": "310807201554-8co73mdi66k6v7q19r0heaculps1g3sh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAzjl4X77OJiJlzKe1g4F1_MxFRjfa0C8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "310807201554-8co73mdi66k6v7q19r0heaculps1g3sh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310807201554:android:51b9c6de49231ceca555cb",
+        "android_client_info": {
+          "package_name": "cpm.namma.mechanics.namma_mechanics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310807201554-bce983jhitq6cd0oks5ppnkkmrgkhlmh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cpm.namma.mechanics.namma_mechanics",
+            "certificate_hash": "7a3e26efb242dd020968fe995bc8fb4c139aa1fc"
+          }
+        },
+        {
+          "client_id": "310807201554-8co73mdi66k6v7q19r0heaculps1g3sh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAzjl4X77OJiJlzKe1g4F1_MxFRjfa0C8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "310807201554-8co73mdi66k6v7q19r0heaculps1g3sh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310807201554:android:3ee9d9c9068d21cda555cb",
+        "android_client_info": {
+          "package_name": "cpm.namma.mechanics.partner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310807201554-fcvrjfaj785th6u8hubdjiiejd2u87dn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cpm.namma.mechanics.partner",
+            "certificate_hash": "7a3e26efb242dd020968fe995bc8fb4c139aa1fc"
+          }
+        },
+        {
+          "client_id": "310807201554-8co73mdi66k6v7q19r0heaculps1g3sh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAzjl4X77OJiJlzKe1g4F1_MxFRjfa0C8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "310807201554-8co73mdi66k6v7q19r0heaculps1g3sh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
