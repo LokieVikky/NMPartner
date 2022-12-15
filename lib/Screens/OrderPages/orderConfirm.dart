@@ -26,11 +26,11 @@ class OrderConfirm extends ConsumerStatefulWidget {
 }
 
 class _OrderConfirmState extends ConsumerState<OrderConfirm> {
-
   @override
   void initState() {
-    ref.read(pendingOrderInfoNotifierProvider.notifier).getPendingOrders(
-        widget.data!.customerId!, widget.data!.orderId!);
+    ref
+        .read(pendingOrderInfoNotifierProvider.notifier)
+        .getPendingOrders(widget.data!.customerId!, widget.data!.orderId!);
   }
 
   @override
@@ -53,13 +53,11 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
           bottom: 50.0,
           top: 10.0,
         ),
-        child: Consumer(
-            builder: (context, ref, child) {
-              PendingOrderState? mData = ref.watch(
-                  pendingOrderInfoNotifierProvider);
-              return () {
-                return mData!.data!.when(data: (custData) =>
-                    SingleChildScrollView(
+        child: Consumer(builder: (context, ref, child) {
+          PendingOrderState? mData = ref.watch(pendingOrderInfoNotifierProvider);
+          return () {
+            return mData!.data!.when(
+                data: (custData) => SingleChildScrollView(
                       child: Column(
                         children: [
                           Container(
@@ -67,8 +65,8 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                             margin: EdgeInsets.only(
                               bottom: 20.0,
                             ),
-                            child: Text('Order ID - ' +
-                                widget.data!.orderId!.substring(0, 13),
+                            child: Text(
+                              'Order ID - ' + widget.data!.orderId!.substring(0, 13),
                               style: MyTextStyle.text4,
                             ),
                           ),
@@ -98,8 +96,7 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                                     bottom: 10.0,
                                   ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceEvenly,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Stack(
                                         alignment: Alignment.center,
@@ -108,11 +105,8 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                                             height: 115,
                                             width: 115,
                                             decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  width: 1,
-                                                  color: MyColors.yellow),
-                                              borderRadius: BorderRadius.circular(
-                                                  100),
+                                              border: Border.all(width: 1, color: MyColors.yellow),
+                                              borderRadius: BorderRadius.circular(100),
                                             ),
                                           ),
                                           Container(
@@ -120,20 +114,17 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                                             width: 100,
                                             decoration: BoxDecoration(
                                               color: MyColors.yellow,
-                                              borderRadius: BorderRadius.circular(
-                                                  100),
+                                              borderRadius: BorderRadius.circular(100),
                                             ),
                                             child: ClipRRect(
                                               borderRadius: BorderRadius.circular(100),
-                                              child: Image.network(
-                                                  custData.custProfile!),
+                                              child: Image.network(custData.custProfile!),
                                             ),
                                           ),
                                         ],
                                       ),
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "Customer name",
@@ -154,10 +145,8 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                                   ),
                                   child: Column(
                                     children: [
-                                      VehicleInfo(
-                                        vehicle: "Phone",
-                                        value: '' //todo should add
-                                      ),
+                                      VehicleInfo(vehicle: "Phone", value: '' //todo should add
+                                          ),
                                       VehicleInfo(
                                         vehicle: "Amount",
                                         value: widget.data!.amount!,
@@ -175,18 +164,18 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                                   ),
                                 ),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    FlatButton(
+                                    TextButton(
                                       onPressed: () async {
-                                       bool result = await ref.read(changeOrderStatusNotifierProvider.notifier)
+                                        bool result = await ref
+                                            .read(changeOrderStatusNotifierProvider.notifier)
                                             .changeStatus(widget.data!.orderId!, 'REJECTED');
-                                       if(result) {
-                                        showSnack('update success');
-                                       } else {
-                                         showSnack('update failed');
-                                       }
+                                        if (result) {
+                                          showSnack('update success');
+                                        } else {
+                                          showSnack('update failed');
+                                        }
                                       },
                                       child: OrderButton(
                                         button_name: "Cancel order",
@@ -195,11 +184,12 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                                         border_color: MyColors.red,
                                       ),
                                     ),
-                                    FlatButton(
+                                    TextButton(
                                       onPressed: () async {
-                                        bool result = await ref.read(changeOrderStatusNotifierProvider.notifier)
+                                        bool result = await ref
+                                            .read(changeOrderStatusNotifierProvider.notifier)
                                             .changeStatus(widget.data!.orderId!, 'ACCEPTED');
-                                        if(result) {
+                                        if (result) {
                                           showSnack('update success');
                                         } else {
                                           showSnack('update failed');
@@ -220,17 +210,17 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                         ],
                       ),
                     ),
-                    error: (error, eTxt) =>
-                        Center(child: Text(eTxt.toString()),),
-                    loading: () => Center(child: CircularProgressIndicator()));
-              }();
-            }
-        ),
+                error: (error, eTxt) => Center(
+                      child: Text(eTxt.toString()),
+                    ),
+                loading: () => Center(child: CircularProgressIndicator()));
+          }();
+        }),
       ),
     );
-
   }
-  void showSnack (String msg) {
+
+  void showSnack(String msg) {
     Fluttertoast.showToast(
         msg: msg,
         toastLength: Toast.LENGTH_LONG,
@@ -242,6 +232,3 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
     Navigator.pop(context);
   }
 }
-
-
-

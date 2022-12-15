@@ -132,7 +132,7 @@ class _AddNewServiceState extends State<AddNewService> {
                 SizedBox(
                   width: _width / 12,
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: () {
                    /* if (widget.data != null) {
                       serviceProvider.updateService(

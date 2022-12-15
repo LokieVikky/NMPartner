@@ -200,7 +200,7 @@ class ApiService {
     }
   }
 
-  getCurrentStep(String partnerid) async {
+  getCurrentStep(String? partnerid) async {
     QueryOptions options = QueryOptions(
         document: gql(query_getCurrentStep),
         variables: {'partnerId': partnerid});

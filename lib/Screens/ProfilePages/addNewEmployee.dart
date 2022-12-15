@@ -167,7 +167,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
               SizedBox(
                 width: _width / 10,
               ),
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   /*
                   if (widget.data != null) {
