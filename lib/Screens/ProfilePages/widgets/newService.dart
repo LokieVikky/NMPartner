@@ -3,12 +3,11 @@ import 'package:partner/values/MyColors.dart';
 import 'package:partner/values/MyTextstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 
 class AddNewService extends StatefulWidget {
   final data;
 
-  const AddNewService({Key key, this.data}) : super(key: key);
+  const AddNewService({Key? key, this.data}) : super(key: key);
 
   @override
   _AddNewServiceState createState() => _AddNewServiceState();
@@ -41,8 +40,7 @@ class _AddNewServiceState extends State<AddNewService> {
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
-    final serviceProvider =
-        Provider.of<ProfilePageProvider>(context, listen: false);
+
     return Container(
       margin: EdgeInsets.all(30.0),
       width: double.infinity,
@@ -136,7 +134,7 @@ class _AddNewServiceState extends State<AddNewService> {
                 ),
                 FlatButton(
                   onPressed: () {
-                    if (widget.data != null) {
+                   /* if (widget.data != null) {
                       serviceProvider.updateService(
                           _name.value.text,
                           double.parse(_price.value.text),
@@ -178,7 +176,7 @@ class _AddNewServiceState extends State<AddNewService> {
                                 fontSize: 20.0)
                             .toString();
                       }
-                    }
+                    }*/
                   },
                   child: Container(
                     height: _height / 15,

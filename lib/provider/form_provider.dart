@@ -1,32 +1,25 @@
 import 'package:partner/models/formData.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FormProvider with ChangeNotifier {
-  FirebaseFirestore _db = FirebaseFirestore.instance;
-
-  Future<void> setFromData(FormData form, String id) {
-    var options = SetOptions(merge: true);
-    return _db.collection('garages').doc(id).set(form.toMap(), options);
-  }
-
-  String formID;
+/*
+  String? formID;
   var uuid;
-  String fullName;
-  String shopName;
-  String description;
-  String shopNo;
-  String street;
-  String city;
-  String state;
-  String pincode;
+  String? fullName;
+  String? shopName;
+  String? description;
+  String? shopNo;
+  String? street;
+  String? city;
+  String? state;
+  String? pincode;
 
-  Map address;
-  Map shopImages;
-  List shopTypeList = [];
-  List carouselImages;
-  List services;
+  Map? address;
+  Map? shopImages;
+  List? shopTypeList = [];
+  List? carouselImages;
+  List? services;
 
   Map selectedShopsBrands = {};
   String selectedShopType = '';
@@ -34,7 +27,7 @@ class FormProvider with ChangeNotifier {
   // String _form;
 
   //Getters
-  String get form => fullName;
+  String? get form => fullName;
 
   saveData(
       {aadharCard,
@@ -88,7 +81,7 @@ class FormProvider with ChangeNotifier {
           orderHistory: [],
           currentOrder: [],
           empDetails: empDetails);
-      setFromData(newData, formID);
+
     } else {
       var updatedEntry = FormData(
           formID: formID,
@@ -105,19 +98,18 @@ class FormProvider with ChangeNotifier {
           services: services,
           empDetails: empDetails);
       sampleTest(formID);
-      setFromData(updatedEntry, formID);
     }
   }
 
   shopTypeAdd(type) {
     selectedShopType = type;
-    shopTypeList.add(type);
+    shopTypeList!.add(type);
     notifyListeners();
   }
 
   shopTypeRemove(type) {
     selectedShopType = '';
-    shopTypeList.remove(type);
+    shopTypeList!.remove(type);
     notifyListeners();
   }
 
@@ -140,16 +132,10 @@ class FormProvider with ChangeNotifier {
   }
 
   sampleTest(uuid) {
-    shopTypeList.forEach((element) {
+    shopTypeList!.forEach((element) {
       if (!selectedShopsBrands.containsKey(element)) {
         selectedShopsBrands[element] = ['shops'];
       }
     });
-    selectedShopsBrands.forEach((key, value) {
-      value.forEach((val) =>
-          _db.collection('vehicles').doc(key.toString().toLowerCase()).update({
-            val: FieldValue.arrayUnion([uuid])
-          }));
-    });
-  }
+  }*/
 }

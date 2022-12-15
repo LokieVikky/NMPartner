@@ -1,11 +1,11 @@
 class AddressModel {
-  final double lat;
-  final double long;
-  final int shopNo;
-  final String street;
-  final String city;
-  final String state;
-  final String pincode;
+  final double? lat;
+  final double? long;
+  final int? shopNo;
+  final String? street;
+  final String? city;
+  final String? state;
+  final String? pincode;
 
   AddressModel(
       {this.lat,

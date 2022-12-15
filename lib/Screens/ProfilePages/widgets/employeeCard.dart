@@ -2,19 +2,17 @@ import 'package:partner/Screens/ProfilePages/addNewEmployee.dart';
 import 'package:partner/Screens/ProfilePages/providers/ProfilePageProvider.dart';
 import 'package:partner/values/MyTextstyle.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class EmployeeCard extends StatelessWidget {
   String employeeName;
   String profile;
   String id;
 
-  EmployeeCard({this.employeeName, this.profile, this.id});
+  EmployeeCard({required this.employeeName, required this.profile, required this.id});
 
   @override
   Widget build(BuildContext context) {
-    final employeeProvider =
-        Provider.of<ProfilePageProvider>(context, listen: false);
+
     double _height = MediaQuery.of(context).size.height;
     return Padding(
       padding: const EdgeInsets.only(
@@ -90,7 +88,7 @@ class EmployeeCard extends StatelessWidget {
                       width: 10.0,
                     ),
                     IconButton(
-                      onPressed: () => employeeProvider.removeEmployee(id),
+                      onPressed: () {},
                       icon: Icon(
                         Icons.delete,
                         color: Colors.red,

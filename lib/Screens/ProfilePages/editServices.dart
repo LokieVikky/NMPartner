@@ -1,21 +1,17 @@
-import 'package:partner/Screens/ProfilePages/providers/ProfilePageProvider.dart';
 import 'package:partner/Screens/ProfilePages/widgets/newService.dart';
 import 'package:partner/values/MyColors.dart';
 import 'package:partner/values/MyTextstyle.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class EditServices extends StatelessWidget {
   final services;
+  const EditServices({Key? key, this.services}) : super(key: key);
 
-  const EditServices({Key key, this.services}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final serviceProvider =
-        Provider.of<ProfilePageProvider>(context, listen: false);
-    serviceProvider.getServices();
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -89,69 +85,56 @@ class EditServices extends StatelessWidget {
                     ),
                     color: MyColors.purewhite,
                   ),
-                  child: Consumer<ProfilePageProvider>(
-                    builder: (context, instance, V) => ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: serviceProvider.services.length,
-                      physics: ScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: EdgeInsets.only(
-                            top: 10.0,
-                            left: 10.0,
-                            right: 10.0,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                serviceProvider.services[index]['name'],
-                                style: MyTextStyle.text4,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    '₹ ' +
-                                        serviceProvider.services[index]['price']
-                                            .toString(),
-                                    style: MyTextStyle.text4,
-                                  ),
-                                  SizedBox(
-                                    width: 20.0,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () => showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      builder: (context) =>
-                                          SingleChildScrollView(
-                                        child: Container(
-                                          padding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom),
-                                          child: AddNewService(
-                                            data: {
-                                              'name': serviceProvider
-                                                  .services[index]['name'],
-                                              'price': serviceProvider
-                                                  .services[index]['price'],
-                                              'index': index
-                                            },
-                                          ),
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      top: 10.0,
+                      left: 10.0,
+                      right: 10.0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('name',
+                          style: MyTextStyle.text4,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              '₹ ' +
+                                  'price'.toString(),
+                              style: MyTextStyle.text4,
+                            ),
+                            SizedBox(
+                              width: 20.0,
+                            ),
+                            GestureDetector(
+                              onTap: () => showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (context) =>
+                                    SingleChildScrollView(
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom),
+                                        child: AddNewService(
+                                          data: {
+                                            'name':'1name',
+                                            'price': '1price',
+                                            'index': 1
+                                          },
                                         ),
                                       ),
                                     ),
-                                    child: Icon(
-                                      Icons.edit_outlined,
-                                    ),
-                                  ),
-                                ],
                               ),
-                            ],
-                          ),
-                        );
-                      },
+                              child: Icon(
+                                Icons.edit_outlined,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),

@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class orderProvider extends ChangeNotifier {
+/*
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String loginUID;
+  String? loginUID;
   List showed = [];
   List data = [];
   List ids = [];
@@ -19,7 +19,7 @@ class orderProvider extends ChangeNotifier {
   Stream getOrder() async* {
     var ac = _firestore.collection('garages').doc(loginUID).snapshots();
     ac.listen((event) {
-      ids = event.data()['currentOrder'];
+      ids = event.data()!['currentOrder'];
       getOrders(ids);
     });
     yield ids;
@@ -40,7 +40,7 @@ class orderProvider extends ChangeNotifier {
   Stream orderHistory() async* {
     var ac = _firestore.collection('garages').doc(loginUID).snapshots();
     ac.listen((event) {
-      idsHistory = event.data()['orderHistory'];
+      idsHistory = event.data()!['orderHistory'];
       getOrdersHistory(idsHistory);
     });
     yield ids;
@@ -101,4 +101,5 @@ class orderProvider extends ChangeNotifier {
     data.remove(orderdata);
     notifyListeners();
   }
+*/
 }

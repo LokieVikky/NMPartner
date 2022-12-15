@@ -1,21 +1,20 @@
 
 import 'package:hive/hive.dart';
 
-part 'MechanicServies.g.dart';
 @HiveType(typeId: 123, adapterName: 'MechanicServiesHiveGen')
 
 class MechanicServices{
   @HiveField(0)
-  final String name;
+  final String? name;
 
   @HiveField(1)
-  final int price;
+  final int? price;
 
   @HiveField(2)
-  final String id;
+  final String? id;
 
   @HiveField(3)
-  bool selected;
+  bool? selected;
   MechanicServices({this.name, this.price, this.id, this.selected});
 
 

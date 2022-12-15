@@ -4,10 +4,10 @@ class OrderButton extends StatelessWidget {
   String button_name;
   Color border_color, button_color, text_color;
   OrderButton({
-    this.button_name,
-    this.border_color,
-    this.button_color,
-    this.text_color,
+    required this.button_name,
+    required this.border_color,
+    required this.button_color,
+    required this.text_color,
   });
 
   @override

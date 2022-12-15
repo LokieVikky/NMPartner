@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,19 +7,20 @@ import 'package:partner/values/MyColors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CurrentState extends ChangeNotifier {
+/*
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
-  SharedPreferences prefs;
-  UserCredential authResult;
-  OurGarage currentUser;
+  SharedPreferences? prefs;
+  UserCredential? authResult;
+  OurGarage? currentUser;
 
   preference() async {
     prefs = await SharedPreferences.getInstance();
   }
 
-  String _verificationCode;
-  String phoneNo, smsSent, _verificationId;
-  String _inputText;
+  String? _verificationCode;
+  String? phoneNo, smsSent, _verificationId;
+  String? _inputText;
 
   Future<void> verifyPhone(String inputText, context) async {
     _inputText = inputText;
@@ -44,7 +43,7 @@ class CurrentState extends ChangeNotifier {
     };
 
     PhoneCodeSent codeSent =
-        (String verificationId, [int forceCodeResent]) async {
+        (String? verificationId, [int? forceCodeResent]) async {
       Fluttertoast.showToast(
               msg: "The Otp has been sent to your mobile",
               toastLength: Toast.LENGTH_SHORT,
@@ -87,43 +86,43 @@ class CurrentState extends ChangeNotifier {
   }
 
   formVerified() async {
-    prefs.setString('form', 'true');
+    prefs!.setString('form', 'true');
     await _firestore
         .collection("garages")
-        .doc(prefs.getString('loginID'))
+        .doc(prefs!.getString('loginID'))
         .set({"register": true});
   }
 
   verifyOtp(String input, context) async {
-    String retVal = "error";
+    String? retVal = "error";
     OurGarage _user = OurGarage();
     final AuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: _verificationId, smsCode: input);
+        verificationId: _verificationId!, smsCode: input);
     try {
       authResult = await _auth.signInWithCredential(credential);
 
       // Here i have to save the details of the user in the database
-      if (authResult.additionalUserInfo.isNewUser) {
-        prefs.setString('loginID', authResult.user.uid);
-        prefs.setString('form', 'false');
+      if (authResult!.additionalUserInfo!.isNewUser) {
+        prefs!.setString('loginID', authResult!.user!.uid);
+        prefs!.setString('form', 'false');
         retVal = await OurDatabase()
-            .createUser(phone: '+91$_inputText', uid: authResult.user.uid);
+            .createUser(phone: '+91$_inputText', uid: authResult!.user!.uid);
         print(
-            '*************************************${prefs.getString('form')}');
+            '*************************************${prefs!.getString('form')}');
 
         await Navigator.pushNamedAndRemoveUntil(
             context, "/formPage", (route) => false);
       } else {
-        if (prefs.getString('form') == null) {
+        if (prefs!.getString('form') == null) {
           bool register = false;
           await _firestore
               .collection('garages')
-              .doc(authResult.user.uid)
+              .doc(authResult!.user!.uid)
               .get()
               .then((value) => register = value.get('register'));
           if (register) {
-            prefs.setString('form', 'true');
-            prefs.setString('loginID', authResult.user.uid);
+            prefs!.setString('form', 'true');
+            prefs!.setString('loginID', authResult!.user!.uid);
             await Navigator.pushNamedAndRemoveUntil(
                 context, "/homePage", (route) => false);
           } else {
@@ -131,7 +130,7 @@ class CurrentState extends ChangeNotifier {
                 context, "/formPage", (route) => false);
           }
         }
-        prefs.setString('loginID', authResult.user.uid);
+        prefs!.setString('loginID', authResult!.user!.uid);
 
         await Navigator.pushNamedAndRemoveUntil(
             context, "/homePage", (route) => false);
@@ -157,4 +156,5 @@ class CurrentState extends ChangeNotifier {
       //     .toString();
     }
   }
+*/
 }

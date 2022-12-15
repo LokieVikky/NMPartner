@@ -4,12 +4,11 @@ import 'package:partner/Screens/ProfilePages/widgets/employeeCard.dart';
 import 'package:partner/values/MyColors.dart';
 import 'package:partner/values/MyTextstyle.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class EditEmployee extends StatelessWidget {
   final employee;
 
-  const EditEmployee({Key key, this.employee}) : super(key: key);
+  const EditEmployee({Key? key, this.employee}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,25 +40,15 @@ class EditEmployee extends StatelessWidget {
                 style: MyTextStyle.text1,
               ),
             ),
-            Consumer<ProfilePageProvider>(builder: (context, instance, V) {
-              return ListView.builder(
-                physics: ScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: employee.length,
-                itemBuilder: (context, index) {
-                  String key = employee.keys.elementAt(index);
-                  return Column(
-                    children: [
-                      EmployeeCard(
-                        employeeName: employee[key]['name'],
-                        profile: employee[key]['profile'],
-                        id: key,
-                      ),
-                    ],
-                  );
-                },
-              );
-            }),
+            Column(
+              children: [
+                EmployeeCard(
+                  employeeName: 'name',
+                  profile: 'profile',
+                  id: "key",
+                ),
+              ],
+            ),
             GestureDetector(
               onTap: () => showModalBottomSheet(
                 context: context,

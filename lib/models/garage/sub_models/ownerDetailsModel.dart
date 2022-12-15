@@ -1,25 +1,24 @@
 
 import 'package:hive/hive.dart';
 
-part 'ownerDetailsModel.g.dart';
 
 @HiveType(typeId: 111, adapterName: 'OwnerDetailsModelHiveGen')
 class OwnerDetailsModel {
 
   @HiveField(0)
-  final String title;
+  final String? title;
 
   @HiveField(1)
-  final String firstName;
+  final String? firstName;
 
   @HiveField(2)
-  final String lastName;
+  final String? lastName;
 
   @HiveField(3)
-  final String gender;
+  final String? gender;
 
   @HiveField(4)
-  final int age;
+  final int? age;
 
   OwnerDetailsModel(
       {this.title, this.firstName, this.lastName, this.gender, this.age});

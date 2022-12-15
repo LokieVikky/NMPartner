@@ -6,9 +6,9 @@ class CustomButton extends StatelessWidget {
   Color bgColor, textColor;
 
   CustomButton({
-    this.button_text,
-    this.bgColor,
-    this.textColor,
+    required this.button_text,
+    required this.bgColor,
+    required this.textColor,
   });
   @override
   Widget build(BuildContext context) {

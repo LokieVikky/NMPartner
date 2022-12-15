@@ -3,7 +3,7 @@ import 'package:partner/values/MyTextstyle.dart';
 import 'package:flutter/material.dart';
 
 class VehicleInfoHome extends StatelessWidget {
-  VehicleInfoHome({this.vehicle, this.value});
+  VehicleInfoHome({required this.vehicle, required this.value});
 
   final String vehicle, value;
 

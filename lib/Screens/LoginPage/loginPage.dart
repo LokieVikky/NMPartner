@@ -1,19 +1,14 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
-import 'package:partner/Screens/FormPage/formPage.dart';
-import 'package:partner/Screens/HomePages/homePage.dart';
-import 'package:partner/connectChecker.dart';
-import 'package:partner/provider/currentState.dart';
 import 'package:partner/screens/LoginPage/Verification.dart';
+import 'package:partner/services/apiService.dart';
 import 'package:partner/values/MyColors.dart';
 import 'package:partner/values/MyTextstyle.dart';
-import 'package:provider/provider.dart';
 
-class   LoginPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -24,31 +19,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _aadhaarController = TextEditingController();
   bool phoneValid = false;
   bool aadharValid = false;
-  String imageURL;
+  String? imageURL;
   bool ConnectionCheck = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    try {
-      final _currentProvider =
-          Provider.of<CurrentState>(context, listen: false);
-      _currentProvider.preference().then((d) {
-        if (_currentProvider.prefs.getString('loginID') != null) {
-          if (_currentProvider.prefs.getString('form') == 'true') {
-            Navigator.pushNamedAndRemoveUntil(
-                context, "/homePage", (route) => false);
-          } else {
-            Navigator.pushNamedAndRemoveUntil(
-                context, "/formPage", (route) => false);
-          }
-        }
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
 
   @override
   void dispose() {
@@ -57,10 +29,20 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+
+  @override
+  void initState() {
+    () async {
+      String? accessToken = await ApiService().readAccessToken();
+      if(accessToken != null && accessToken.isNotEmpty) {
+        Navigator.pushNamed(context, '/form');
+      }
+    }();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final _storage = FirebaseStorage.instance;
     final _picker = ImagePicker();
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
@@ -69,10 +51,9 @@ class _LoginPageState extends State<LoginPage> {
       body: Listener(
         onPointerDown: (_) {
           FocusScopeNode currentFocus = FocusScope.of(context);
-
           if (!currentFocus.hasPrimaryFocus &&
               currentFocus.focusedChild != null) {
-            FocusManager.instance.primaryFocus.unfocus();
+            FocusManager.instance.primaryFocus!.unfocus();
           }
         },
         child: SafeArea(
@@ -212,34 +193,20 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                Consumer<ConnectionResult>(
-                  builder: (BuildContext context, ConnectionResult value,
-                      Widget child) {
-                    switch (value) {
-                      case ConnectionResult.Working:
-                        ConnectionCheck = false;
-                        break;
-                      case ConnectionResult.Offline:
-                        ConnectionCheck = true;
-                        break;
-                      default:
-                        ConnectionCheck = false;
-                    }
-                    return Visibility(
-                      visible: ConnectionCheck,
-                      child: Container(
-                          width: size.width,
-                          color: Colors.white,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Lottie.asset('assets/lotties/connection.json',
-                                  width: size.width * 0.8),
-                              Text('Waiting for Connection...')
-                            ],
-                          )),
-                    );
-                  },
+                // todo CodeChanged
+                Visibility(
+                  visible: ConnectionCheck,
+                  child: Container(
+                      width: size.width,
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Lottie.asset('assets/lotties/connection.json',
+                              width: size.width * 0.8),
+                          Text('Waiting for Connection...')
+                        ],
+                      )),
                 )
               ],
             ),

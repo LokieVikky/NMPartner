@@ -3,7 +3,7 @@ import 'package:partner/values/MyTextstyle.dart';
 import 'package:flutter/material.dart';
 
 class VehicleInfo extends StatelessWidget {
-  VehicleInfo({this.vehicle, this.value});
+  VehicleInfo({required this.vehicle, required this.value});
 
   final String vehicle, value;
 
@@ -14,47 +14,29 @@ class VehicleInfo extends StatelessWidget {
         bottom: 5.0,
       ),
       padding: EdgeInsets.only(
-        left: 50.0,
-        right: 50.0,
+        left: 20.0,
+        right: 20.0,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
-              Container(
-                // alignment: Alignment.centerLeft,
-                height: 25,
-                width: 25,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 2,
-                    color: MyColors.purple1,
-                  ),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.check,
-                    size: 20,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
               Text(
                 vehicle,
                 style: MyTextStyle.text4,
               ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  value,
+                  textAlign: TextAlign.left,
+                  style: MyTextStyle.text5,
+                ),
+              ),
             ],
           ),
-          Container(
-            child: Text(
-              value,
-              style: MyTextStyle.text5,
-            ),
-          ),
+
         ],
       ),
     );

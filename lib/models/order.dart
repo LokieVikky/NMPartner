@@ -1,18 +1,18 @@
 class OrderModel{
-  String userUID;
-  String garageUID;
-  String userPhone;
-  String name;
-  Map address;
-  String orderId;
-  String otp;
-  bool pickup;
-  Map charges;
-  List services;
-  String shopName;
-  String vehicleName;
-  String vehicleBrand;
-  String vehicleType;
+  String? userUID;
+  String? garageUID;
+  String? userPhone;
+  String? name;
+  Map? address;
+  String? orderId;
+  String? otp;
+  bool? pickup;
+  Map? charges;
+  List? services;
+  String? shopName;
+  String? vehicleName;
+  String? vehicleBrand;
+  String? vehicleType;
 
 
   OrderModel({

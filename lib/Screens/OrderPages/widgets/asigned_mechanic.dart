@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class AsignedMechanic extends StatelessWidget {
   final data;
 
-  const AsignedMechanic({Key key, this.data}) : super(key: key);
+  const AsignedMechanic({Key? key, this.data}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,7 +27,7 @@ class AsignedMechanic extends StatelessWidget {
               // color: MyColors.yellow,
               borderRadius: BorderRadius.circular(100),
               image: DecorationImage(
-                image: NetworkImage(data['empUrl']),
+                image: NetworkImage('empUrl'),
               ),
             ),
           ),
@@ -35,7 +35,7 @@ class AsignedMechanic extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                data['empName'],
+                'empName',
                 style: MyTextStyle.text7,
               ),
               SizedBox(

@@ -1,15 +1,28 @@
 import 'package:partner/Screens/ProfilePages/providers/ProfilePageProvider.dart';
+import 'package:partner/models/mModel/modelService.dart';
 import 'package:partner/values/MyColors.dart';
 import 'package:partner/values/MyTextstyle.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class Services extends StatelessWidget {
+class Services extends StatefulWidget {
+  List<ModelService> services = [];
+  Services(this.services, {Key? key}) : super(key: key);
+
+  @override
+  State<Services> createState() => _ServicesState();
+}
+
+class _ServicesState extends State<Services> {
+
+  @override
+  void initState() {
+
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final servicesProvider =
-        Provider.of<ProfilePageProvider>(context, listen: false);
-    servicesProvider.getServices();
     return Container(
       child: Column(
         children: [
@@ -54,37 +67,17 @@ class Services extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Consumer<ProfilePageProvider>(
-                  builder: (context, instance, V) => ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: servicesProvider.services.length,
-                    physics: ScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: EdgeInsets.only(
-                          top: 10.0,
-                          left: 10.0,
-                          right: 10.0,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              servicesProvider.services[index]['name'],
-                              style: MyTextStyle.text4,
-                            ),
-                            Text(
-                              '₹ ' +
-                                  servicesProvider.services[index]['price']
-                                      .toString(),
-                              style: MyTextStyle.text4,
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                Container(
+                  margin: EdgeInsets.only(
+                    top: 10.0,
+                    left: 10.0,
+                    right: 10.0,
                   ),
-                ),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                      itemCount: widget.services.length,
+                      itemBuilder: (context, index) => getShopServiceItem(widget.services[index])),
+                )
               ],
             ),
           ),
@@ -92,4 +85,21 @@ class Services extends StatelessWidget {
       ),
     );
   }
+
+  getShopServiceItem(ModelService service) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          service.name,
+          style: MyTextStyle.text4,
+        ),
+        Text(
+          '₹ ' + service.amount,
+          style: MyTextStyle.text4,
+        ),
+      ],
+    );
+  }
+
 }

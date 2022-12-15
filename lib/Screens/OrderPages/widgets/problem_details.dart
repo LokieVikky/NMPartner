@@ -1,65 +1,31 @@
+import 'package:partner/models/mModel/modelService.dart';
 import 'package:partner/values/MyColors.dart';
 import 'package:partner/values/MyTextstyle.dart';
 import 'package:flutter/material.dart';
 
+import '../../../entity/orderListEntity.dart';
+
 class ProblemDetails extends StatelessWidget {
   double Box_Radius = 15.0;
-  final data;
+  OrderListEntity? data;
+  List<ModelService> ? serviceList;
   double chargePrice = 0;
 
-  ProblemDetails({Key key, this.data}) : super(key: key);
+  ProblemDetails({Key? key, this.data, this.serviceList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
-    Map charges = data['charges'];
-    print(charges);
-    data['services'].forEach((e) => chargePrice += e['price']);
-    charges.values.forEach((element) => chargePrice += element);
     return Container(
       width: double.infinity,
+      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
       margin: EdgeInsets.only(
-        bottom: 20.0,
-      ),
+        bottom: 20.0,),
       decoration: BoxDecoration(
         color: MyColors.yellow1,
       ),
       child: Column(
         children: [
-          Container(
-            margin: EdgeInsets.all(
-              20.0,
-            ),
-            height: _height / 8,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: MyColors.purewhite,
-              borderRadius: BorderRadius.all(
-                Radius.circular(Box_Radius),
-              ),
-              border: Border.all(
-                color: MyColors.yellow,
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  "Mechanic verify\nOTP number",
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w600,
-                      color: MyColors.purple,
-                      fontFamily: 'Poppins',
-                      height: 1.2),
-                ),
-                Text(
-                  data['otp'].toString().split('').join('-'),
-                  style: MyTextStyle.text1,
-                ),
-              ],
-            ),
-          ),
           Container(
             margin: EdgeInsets.only(
               left: 25.0,
@@ -91,7 +57,7 @@ class ProblemDetails extends StatelessWidget {
             ),
             alignment: Alignment.topLeft,
             child: Text(
-                data['description'],
+                data!.description!,
                 maxLines: 12,
                 overflow: TextOverflow.clip,
                 textAlign: TextAlign.justify,
@@ -156,9 +122,9 @@ class ProblemDetails extends StatelessWidget {
             child: ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: data['services'].length,
+                itemCount: serviceList!.length,
                 itemBuilder: (context, index) {
-                  var abc = data['services'][index];
+
                   return Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 10),
                     child: Row(
@@ -190,14 +156,14 @@ class ProblemDetails extends StatelessWidget {
                               width: 20,
                             ),
                             Text(
-                              abc['name'],
+                              serviceList![index].name,
                               overflow: TextOverflow.fade,
                               style: MyTextStyle.text4,
                             ),
                           ],
                         ),
                         Text(
-                          '₹${abc['price'].toString()}',
+                          serviceList![index].amount,
                           overflow: TextOverflow.fade,
                           style: MyTextStyle.text9,
                         ),
@@ -245,9 +211,9 @@ class ProblemDetails extends StatelessWidget {
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: charges.length,
+                  itemCount: 1,
                   itemBuilder: (context, index) {
-                    String key = charges.keys.elementAt(index);
+                    String key = "Others";
                     return Padding(
                       padding: const EdgeInsets.only(top: 4, bottom: 4),
                       child: Row(
@@ -258,7 +224,7 @@ class ProblemDetails extends StatelessWidget {
                             style: MyTextStyle.text4,
                           ),
                           Text(
-                            '₹${charges[key].toString()}',
+                            '-',
                             style: MyTextStyle.text4,
                           ),
                         ],
@@ -286,7 +252,7 @@ class ProblemDetails extends StatelessWidget {
                         style: MyTextStyle.text4,
                       ),
                       Text(
-                        "₹${chargePrice}",
+                        data!.amount!,
                         style: MyTextStyle.text4,
                       ),
                     ],

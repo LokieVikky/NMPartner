@@ -1,19 +1,13 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
 class ProfilePageProvider extends ChangeNotifier {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final _storage = FirebaseStorage.instance;
-  Map employee = {};
+/*  Map employee = {};
   List services = [];
   var snapshot;
   var profileData;
   var selectedEmployee = 0;
   List shopTypeList = [];
-  String loginID;
+  String? loginID;
 
   Map selectedShopsBrands = {};
   String selectedShopType = '';
@@ -53,7 +47,7 @@ class ProfilePageProvider extends ChangeNotifier {
   }
 
   updateEmployee(
-      {String name, File profile, String uid, String oldLink}) async {
+      {String? name, File? profile, String? uid, String? oldLink}) async {
     String profileImageLink;
     Map<String, String> data;
     var req = _firestore
@@ -68,9 +62,9 @@ class ProfilePageProvider extends ChangeNotifier {
           .putFile(profile);
 
       profileImageLink = await snapshot.ref.getDownloadURL();
-      data = {'name': name, 'profile': profileImageLink};
+      data = {'name': name!, 'profile': profileImageLink};
     } else {
-      data = {'name': name, 'profile': oldLink};
+      data = {'name': name!, 'profile': oldLink!};
     }
 
     req.update(data);
@@ -227,5 +221,5 @@ class ProfilePageProvider extends ChangeNotifier {
         });
       });
     });
-  }
+  }*/
 }

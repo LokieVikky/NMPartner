@@ -1,6 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:partner/Screens/FormPage/formPage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:partner/Screens/FormPage/form.dart';
+import 'package:partner/Screens/FormPage/shopInfo.dart';
 import 'package:partner/Screens/HomePages/homePage.dart';
 import 'package:partner/Screens/LoginPage/loginPage.dart';
 import 'package:partner/Screens/OrderPages/orderConfirm.dart';
@@ -8,58 +9,56 @@ import 'package:partner/Screens/OrderPages/orderPage.dart';
 import 'package:partner/Screens/ProfilePages/addNewEmployee.dart';
 import 'package:partner/Screens/ProfilePages/editEmployee.dart';
 import 'package:partner/Screens/ProfilePages/editServices.dart';
-import 'package:partner/Screens/ProfilePages/providers/ProfilePageProvider.dart';
-import 'package:partner/connectChecker.dart';
-import 'package:partner/provider/currentState.dart';
-import 'package:partner/provider/form_provider.dart';
-import 'package:partner/provider/orderProvider.dart';
+import 'package:partner/Screens/ProfilePages/widgets/allReviews.dart';
+import 'package:partner/provider/mProvider/currentStepProvider.dart';
 import 'package:partner/screens/LoginPage/Verification.dart';
-import 'package:provider/provider.dart';
+import 'package:partner/services/apiService.dart';
 
 void main() async {
+  var home;
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp());
+  var apiToken = await ApiService().readAccessToken();
+
+  if(apiToken == null || apiToken.isEmpty) {
+    home = LoginPage();
+  } else {
+    String? partnerId = await ApiService().readPartnerId();
+    if(partnerId != null) {
+      var currentStep = await ApiService().getCurrentStep(partnerId);
+      if(currentStep < 3) {
+        home = FormPage();
+      } else {
+        home = HomePage();
+      }
+    }
+  }
+  runApp(ProviderScope(child: MyApp(home)));
 }
 
 class MyApp extends StatelessWidget {
+  dynamic mHome;
+
+  MyApp(this.mHome);
+
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        //StreamProvider.value(),
-        StreamProvider<ConnectionResult>.value(
-          value: CheckConnectionStatus().connectionChecker.stream,
-        ),
-
-        ChangeNotifierProvider(create: (context) => CurrentState()),
-        ChangeNotifierProvider(create: (context) => FormProvider()),
-        ChangeNotifierProvider(create: (context) => orderProvider()),
-        ChangeNotifierProvider(create: (context) => ProfilePageProvider()),
-        ChangeNotifierProxyProvider<CurrentState, orderProvider>(
-            create: (R) => orderProvider(),
-            update: (_, currentState, data) =>
-                data..login(currentState.prefs.getString('loginID'))),
-        ChangeNotifierProxyProvider<CurrentState, ProfilePageProvider>(
-            create: (R) => ProfilePageProvider(),
-            update: (_, currentState, data) =>
-                data..login(currentState.prefs.getString('loginID'))),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        routes: {
-          '/login': (context) => LoginPage(),
-          '/verify': (context) => Verification('', ''),
-          '/formPage': (context) => FormPage(),
-          '/homePage': (context) => HomePage(),
-          '/orderPage': (context) => OrderPage(),
-          '/orderConfirm': (context) => OrderConfirm(),
-          '/editEmployee': (context) => EditEmployee(),
-          '/addNewEmployee': (context) => AddNewEmployee(),
-          '/editServices': (context) => EditServices(),
-        },
-        home: LoginPage(),
-      ),
+    // todo CodeChanged
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: {
+        '/login': (context) => LoginPage(),
+        '/verify': (context) => Verification('', ''),
+        '/form': (context) => FormPage(),
+        '/homePage': (context) => HomePage(),
+        '/orderPage': (context) => OrderPage(),
+        '/orderConfirm': (context) => OrderConfirm(),
+        '/editEmployee': (context) => EditEmployee(),
+        '/addNewEmployee': (context) => AddNewEmployee(),
+        '/editServices': (context) => EditServices(),
+        '/shopInfo' : (context) => ShopInfo(),
+        '/reviewScreen' : (context) => AllRevivews([])
+      },
+      home: mHome,
     );
   }
 }

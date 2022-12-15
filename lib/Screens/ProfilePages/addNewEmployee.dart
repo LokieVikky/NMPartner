@@ -6,19 +6,18 @@ import 'package:partner/values/MyTextstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class AddNewEmployee extends StatefulWidget {
   final data;
 
-  const AddNewEmployee({Key key, this.data}) : super(key: key);
+  const AddNewEmployee({Key? key, this.data}) : super(key: key);
 
   @override
   _AddNewEmployeeState createState() => _AddNewEmployeeState();
 }
 
 class _AddNewEmployeeState extends State<AddNewEmployee> {
-  File _image;
+  File? _image;
   final picker = ImagePicker();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -58,8 +57,6 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
     print(widget.data);
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
-    final employeeProvider =
-        Provider.of<ProfilePageProvider>(context, listen: false);
 
     return Container(
       margin: EdgeInsets.all(50.0),
@@ -107,7 +104,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                     CircleAvatar(
                       radius: 50.0,
                       backgroundColor: Colors.white,
-                      backgroundImage: FileImage(_image),
+                      backgroundImage: FileImage(_image!),
                     ),
                 },
               ],
@@ -172,6 +169,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
               ),
               FlatButton(
                 onPressed: () {
+                  /*
                   if (widget.data != null) {
                     employeeProvider.updateEmployee(
                         oldLink: widget.data['profile'],
@@ -182,7 +180,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                   } else {
                     if (_image != null) {
                       if (_controller.text.isNotEmpty) {
-                        employeeProvider.addEmployee(_controller.text, _image);
+                        employeeProvider.addEmployee(_controller.text, _image!);
                         _controller.clear();
                       }else{
                         Fluttertoast.showToast(
@@ -215,6 +213,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                           .toString();
                     }
                   }
+*/
                 },
                 child: Container(
                   height: _height / 15,

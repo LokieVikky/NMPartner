@@ -1,17 +1,17 @@
 class FormData {
-  final String formID;
-  final String fullName;
-  final String shopName;
-  final String description;
-  final Map address;
-  final Map shopImages;
-  final Map verificationDocuments;
-  final List empDetails;
-  final List services;
-  final List shopType;
-  final Map brands;
-  final List currentOrder;
-  final List orderHistory;
+  final String? formID;
+  final String? fullName;
+  final String? shopName;
+  final String? description;
+  final Map? address;
+  final Map? shopImages;
+  final Map? verificationDocuments;
+  final List? empDetails;
+  final List? services;
+  final List? shopType;
+  final Map? brands;
+  final List? currentOrder;
+  final List? orderHistory;
 
   FormData({
     this.brands,
