@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,7 @@ class AppGraphQLClient {
   static const String graphQLServerURL = 'http://3.131.69.3:8001/v1/graphql';
   static const Duration queryTimeout = Duration(seconds: 10);
   static late GraphQLClient _client;
+  static String currentToken = '';
 
   AppGraphQLClient(ProviderRef<AppGraphQLClient> ref) {
     User? user = ref.read(firebaseAuthProvider).currentUser;
@@ -28,6 +30,7 @@ class AppGraphQLClient {
             idTokenResult?.claims?["https://hasura.io/jwt/claims"];
         if (hasuraClaims != null) {
           token = await user!.getIdToken();
+          currentToken = token;
           return 'Bearer $token';
         }
         token = await user!.getIdToken(true);
@@ -73,6 +76,11 @@ class AppGraphQLClient {
       rethrow;
     }
   }
+
+  static void printIdToken(){
+    log("AuthToken: "+currentToken);
+  }
+
 }
 
 final graphQLProvider = Provider<AppGraphQLClient>((ref) {

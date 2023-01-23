@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +21,8 @@ import 'package:partner/values/Constants.dart';
 import '../models/mModel/modelCategory.dart';
 import '../models/mModel/modelService.dart';
 import 'gqlQueries.dart';
+
+final apiProvider = Provider<ApiService>((ref) => ApiService());
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -235,7 +238,6 @@ class ApiService {
         return 3;
       }
     } else {
-      print('step null');
       return 0;
     }
   }
@@ -286,12 +288,11 @@ class ApiService {
 
   getCategoryList() async {
     dynamic result = await _getQueryResult(queryGetCategory);
-    List<ModelItemCategory> mList = [];
+    List<CategoryModel> mList = [];
     for (dynamic element in result!.data['namma_mechanics_item_category']) {
-      mList.add(ModelItemCategory(
-        categoryName: element['name'],
-        categoryId: element['id'],
-        categoryIsSelected: false,
+      mList.add(CategoryModel(
+        name: element['name'],
+        categoryID: element['id'],
         // todo should add others
       ));
     }

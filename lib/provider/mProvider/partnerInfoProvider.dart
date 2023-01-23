@@ -1,13 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:partner/data/app_repository.dart';
 import 'package:partner/entity/partnerEntity.dart';
 import 'package:partner/entity/partnerInfoEntity.dart';
-import 'package:partner/provider/mProvider/apiProvider.dart';
+import 'package:partner/provider/providers.dart';
 
 import '../../state/partnerState.dart';
-import 'currentStepProvider.dart';
 
-final partnerNotifierProvider =
-    StateNotifierProvider<PartnerNotifier, PartnerState>((ref) {
+final partnerNotifierProvider = StateNotifierProvider<PartnerNotifier, PartnerState>((ref) {
   return PartnerNotifier(ref);
 });
 
@@ -19,11 +18,9 @@ class PartnerNotifier extends StateNotifier<PartnerState> {
 
   updatePartnerInfo(PartnerInfoEntity partnerInfoModel) async {
     state = await _isLoading();
-    var data = await ref.read(apiProvider).updatePartner(partnerInfoModel);
+    var data = await ref.read(appRepositoryProvider).updatePartner(partnerInfoModel);
     if (data != null) {
-      await ref
-          .read(currentStepNotifierProvider.notifier)
-          .getCurrentStep();
+      ref.refresh(registrationStatusProvider);
       state = _dataState();
     } else {
       state = await _errorState();
@@ -39,7 +36,8 @@ class PartnerNotifier extends StateNotifier<PartnerState> {
   }
 
   _dataState() {
-    return PartnerState(UpdatePartnerStatus.success, AsyncData(PartnerEntity('', '', '')), state.error);
+    return PartnerState(
+        UpdatePartnerStatus.success, AsyncData(PartnerEntity('', '', '')), state.error);
   }
 
   _errorState() {

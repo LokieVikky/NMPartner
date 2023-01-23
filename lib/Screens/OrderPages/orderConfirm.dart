@@ -8,7 +8,7 @@ import 'package:partner/Screens/OrderPages/widgets/order_button.dart';
 import 'package:partner/Screens/OrderPages/widgets/problem_details.dart';
 import 'package:partner/Screens/ProfilePages/providers/ProfilePageProvider.dart';
 import 'package:partner/provider/mProvider/ordersProvider.dart';
-import 'package:partner/provider/orderProvider.dart';
+import 'package:partner/provider/mProvider/orderProvider.dart';
 import 'package:partner/state/customerState.dart';
 import 'package:partner/values/MyColors.dart';
 import 'package:partner/values/MyTextstyle.dart';

@@ -12,11 +12,11 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:partner/Screens/FormPage/form.dart';
 import 'package:partner/models/garage/sub_models/addressModel.dart';
 import 'package:partner/models/mModel/modelService.dart';
+import 'package:partner/provider/providers.dart';
 
 import '../../aws/aws_storage.dart';
 import '../../entity/shopInfoEntity.dart';
 import '../../provider/mProvider/commanProviders.dart';
-import '../../provider/mProvider/currentStepProvider.dart';
 import '../../provider/mProvider/imageProvider.dart';
 import '../../provider/mProvider/shopInfoProvider.dart';
 import '../../services/apiService.dart';
@@ -689,7 +689,7 @@ class _ShopInfoState extends ConsumerState<ShopInfo> {
           data: (data) {
             if (data != null) {
               if (data.shopId!.isNotEmpty) {
-                ref.read(currentStepNotifierProvider.notifier).getCurrentStep();
+                ref.refresh(registrationStatusProvider);
               }
             }
           },

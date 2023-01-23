@@ -6,8 +6,6 @@ import 'package:partner/Screens/FormPage/widgets/shopCategory.dart';
 import 'package:partner/Screens/FormPage/widgets/shopServices.dart';
 import 'package:partner/models/mModel/modelCategory.dart';
 import 'package:partner/provider/mProvider/serviceProvider.dart';
-
-import '../../provider/mProvider/currentStepProvider.dart';
 import '../../provider/mProvider/selectionProvider.dart';
 import '../../provider/mProvider/shopCategory.dart';
 import '../../values/MyColors.dart';
