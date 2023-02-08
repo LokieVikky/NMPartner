@@ -68,7 +68,7 @@ class _AddNewServiceState extends State<AddNewService> {
                 controller: _name,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: MyColors.yellow),
+                    borderSide: BorderSide(color: AppColors.yellow),
                   ),
                 ),
                 style: TextStyle(
@@ -96,7 +96,7 @@ class _AddNewServiceState extends State<AddNewService> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: MyColors.yellow,
+                      color: AppColors.yellow,
                     ),
                   ),
                 ),
@@ -118,7 +118,7 @@ class _AddNewServiceState extends State<AddNewService> {
                         Radius.circular(5.0),
                       ),
                       border: Border.all(
-                        color: MyColors.purple,
+                        color: AppColors.purple,
                       ),
                     ),
                     child: Center(
@@ -186,9 +186,9 @@ class _AddNewServiceState extends State<AddNewService> {
                         Radius.circular(5.0),
                       ),
                       border: Border.all(
-                        color: MyColors.purple,
+                        color: AppColors.purple,
                       ),
-                      color: MyColors.purple,
+                      color: AppColors.purple,
                     ),
                     child: Center(
                       child: Text(

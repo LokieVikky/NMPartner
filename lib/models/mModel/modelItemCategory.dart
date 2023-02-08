@@ -1,13 +1,13 @@
-class CategoryModel {
-  var categoryID;
+class NMCategory {
+  String? categoryID;
   String? name, description, icon;
   bool? open;
 
-  CategoryModel({
+  NMCategory({
     this.categoryID, this.name, this.description, this.icon, this.open});
 
-  factory CategoryModel.fromJson(Map<String, dynamic> json) {
-    return CategoryModel(
+  factory NMCategory.fromJson(Map<String, dynamic> json) {
+    return NMCategory(
       categoryID: json['id'],
       name: json['name'],
       description: json['description'],
@@ -23,4 +23,9 @@ class CategoryModel {
     "icon": icon,
     "enabled": open,
   };
+
+  @override
+  String toString() {
+    return categoryID??'';
+  }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,10 +10,17 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'package:partner/Screens/FormPage/form.dart';
 import 'package:partner/models/garage/sub_models/addressModel.dart';
 import 'package:partner/models/mModel/modelService.dart';
 import 'package:partner/provider/providers.dart';
+import 'package:partner/provider/update_partner_controller.dart';
+import 'package:partner/provider/update_shop_controller.dart';
+import 'package:partner/provider/upload_image_controller.dart';
+import 'package:partner/shared/async_value_ui.dart';
+import 'package:partner/shared/attached_image.dart';
+import 'package:partner/shared/location_picker.dart';
 
 import '../../aws/aws_storage.dart';
 import '../../entity/shopInfoEntity.dart';
@@ -32,745 +40,458 @@ class ShopInfo extends ConsumerStatefulWidget {
 }
 
 class _ShopInfoState extends ConsumerState<ShopInfo> {
-  static TextEditingController _shopName = TextEditingController();
-  final TextEditingController _shopDescription = TextEditingController();
+  final TextEditingController shopNameController = TextEditingController();
+  final TextEditingController shopNoController = TextEditingController();
+  final TextEditingController streetController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController pinCodeController = TextEditingController();
+  final TextEditingController landmarkController = TextEditingController();
+  final TextEditingController latlngController = TextEditingController();
+  final TextEditingController shopDescriptionController = TextEditingController();
+  XFile? shopImg;
+  late AttachedImage shopPhoto;
 
-  final TextEditingController _shopNo = TextEditingController();
-  final TextEditingController _street = TextEditingController();
-  final TextEditingController _city = TextEditingController();
-  final TextEditingController _landMark = TextEditingController();
-  final TextEditingController _pincode = TextEditingController();
-
-  List<Asset> images = <Asset>[];
-  List<dynamic> categoryList = [];
-  List<dynamic> subCategoryList = [];
-  List<dynamic> brandList = [];
-  final _picker = ImagePicker();
-  File? shopPic;
-  AddressModel? shopAddress = null;
+  @override
+  void initState() {
+    super.initState();
+    shopPhoto = AttachedImage(shopImg);
+  }
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    ref.listen<AsyncValue>(
+      updateShopControllerProvider,
+      (_, state) {
+        if (state is AsyncData) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Saved')));
+        }
+        ref.refresh(registrationStatusProvider);
+        state.showSnackBarOnError(context);
+      },
+    );
 
+    return Column(
+      children: [
+        _buildForm(),
+        ref.watch(updateShopControllerProvider).when(data: (data) {
+          return _buildSaveButton(
+              child: Text(
+                'SAVE',
+                style: MyTextStyle.button1,
+              ),
+              onPressed: () => updateShop());
+        }, error: (_, __) {
+          return _buildSaveButton(
+              child: Text(
+                'SAVE',
+                style: MyTextStyle.button1,
+              ),
+              onPressed: () => updateShop());
+        }, loading: () {
+          return _buildSaveButton(child: CupertinoActivityIndicator());
+        }),
+      ],
+    );
+  }
+
+  Widget _buildForm() {
     return SingleChildScrollView(
-      child: Container(
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.only(
-                bottom: 10.0,
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Shop name",
-                      style: MyTextStyle.formLabel,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: TextFormField(
-                      controller: _shopName,
-                      maxLength: 50,
-                      keyboardType: TextInputType.name,
-                      decoration: new InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: MyColors.yellow,
-                            width: 2.0,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: MyColors.yellow,
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
-                      style: MyTextStyle.formTextField,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                      bottom: 10.0,
-                    ),
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Address",
-                          style: MyTextStyle.formLabel,
-                        ),
-                        GestureDetector(
-                            onTap: () => showMap(_width, _height),
-                            child: Icon(Icons.location_searching))
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      bottom: 20.0,
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "House no./ Flat no.",
-                            style: MyTextStyle.formLabel,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5.0,
-                        ),
-                        Container(
-                          width: double.infinity,
-                          child: TextFormField(
-                            controller: _shopNo,
-                            maxLength: 4,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            decoration: new InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: MyColors.yellow,
-                                  width: 2.0,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: MyColors.yellow,
-                                  width: 2.0,
-                                ),
-                              ),
-                            ),
-                            style: MyTextStyle.formTextField,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      bottom: 20.0,
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Street/town",
-                            style: MyTextStyle.formLabel,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5.0,
-                        ),
-                        Container(
-                          width: double.infinity,
-                          child: TextFormField(
-                            controller: _street,
-                            maxLength: 50,
-                            keyboardType: TextInputType.name,
-                            decoration: new InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: MyColors.yellow,
-                                  width: 2.0,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: MyColors.yellow,
-                                  width: 2.0,
-                                ),
-                              ),
-                            ),
-                            style: MyTextStyle.formTextField,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(
-                          bottom: 20.0,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              child: Text(
-                                "City",
-                                style: MyTextStyle.formLabel,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5.0,
-                            ),
-                            Container(
-                              width: _width * 0.4,
-                              child: TextFormField(
-                                controller: _city,
-                                maxLength: 50,
-                                keyboardType: TextInputType.name,
-                                decoration: new InputDecoration(
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: MyColors.yellow,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: MyColors.yellow,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                ),
-                                style: MyTextStyle.formTextField,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                          bottom: 20.0,
-                        ),
-                        child: Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              child: Text(
-                                "Pincode",
-                                style: MyTextStyle.formLabel,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5.0,
-                            ),
-                            Container(
-                              width: _width * 0.4,
-                              child: TextFormField(
-                                controller: _pincode,
-                                keyboardType: TextInputType.number,
-                                maxLength: 6,
-                                decoration: new InputDecoration(
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: MyColors.yellow,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: MyColors.yellow,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                ),
-                                style: MyTextStyle.formTextField,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      bottom: 20.0,
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Landmark",
-                            style: MyTextStyle.formLabel,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5.0,
-                        ),
-                        Container(
-                          width: double.infinity,
-                          child: TextFormField(
-                            controller: _landMark,
-                            keyboardType: TextInputType.name,
-                            maxLength: 25,
-                            decoration: new InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: MyColors.yellow,
-                                  width: 2.0,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: MyColors.yellow,
-                                  width: 2.0,
-                                ),
-                              ),
-                            ),
-                            style: MyTextStyle.formTextField,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                bottom: 20.0,
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Description",
-                      style: MyTextStyle.formLabel,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: TextFormField(
-                      maxLines: 7,
-                      maxLength: 1000,
-                      minLines: 3,
-                      controller: _shopDescription,
-                      keyboardType: TextInputType.name,
-                      decoration: new InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: MyColors.yellow,
-                            width: 2.0,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: MyColors.yellow,
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
-                      style: MyTextStyle.formTextField,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  DottedBorder(
-                      borderType: BorderType.RRect,
-                      radius: Radius.circular(12),
-                      padding: EdgeInsets.all(6),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(12),
-                        ),
-                        child: Consumer(builder: (context, ref, child) {
-                          shopPic = ref.watch(shopPicProvider);
-                          return shopPic == null
-                              ? Container(
-                                  margin: EdgeInsets.all(
-                                    20.0,
-                                  ),
-                                  width: _width,
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        "Upload your Shop photo",
-                                        style: MyTextStyle.text4,
-                                      ),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Icon(
-                                        Icons.image_outlined,
-                                        color: MyColors.pureblack,
-                                        size: 30.0,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              pickFromCamera(shopPicProvider);
-                                            },
-                                            child: Container(
-                                              height: _height / 15,
-                                              width: _width / 3,
-                                              margin: EdgeInsets.only(
-                                                  top: 20.0, right: 10.0),
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(5.0),
-                                                ),
-                                                border: Border.all(
-                                                    color: MyColors.pureblack),
-                                              ),
-                                              child: Text(
-                                                "Camera",
-                                                style: MyTextStyle.button1,
-                                              ),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              pickFromGallery(shopPicProvider);
-                                            },
-                                            child: Container(
-                                              height: _height / 15,
-                                              width: _width / 3,
-                                              margin: EdgeInsets.only(
-                                                  top: 20.0, left: 10.0),
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(5.0),
-                                                ),
-                                                color: MyColors.yellow,
-                                              ),
-                                              child: Text(
-                                                "Browse",
-                                                style: MyTextStyle.button1,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : GestureDetector(
-                                  onTap: () => ref.refresh(shopPicProvider),
-                                  child: Container(
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                            color: Colors.deepPurple,
-                                            child: Image.file(shopPic!,
-                                                fit: BoxFit.cover)),
-                                        Positioned(
-                                            top: 0,
-                                            right: 0,
-                                            child: Icon(
-                                              Icons.cancel_rounded,
-                                              color: MyColors.red,
-                                            ))
-                                      ],
-                                    ),
-                                  ),
-                                );
-                        }),
-                      )),
-                ],
-              ),
-            ),
-            StreamBuilder(
-              builder: (context, snapshot) {
-                ShopState state = ref.watch(shopInfoNotifierProvider);
-                switch (state.status) {
-                  case UpdateShopStatus.initial:
-                  case UpdateShopStatus.success:
-                  case UpdateShopStatus.failure:
-                    return GestureDetector(
-                      onTap: () {
-                        if (validateForm()) {
-                          ref
-                              .read(shopInfoNotifierProvider.notifier)
-                              .setLoadingState();
-                          uploadShop();
-                        }
-                      },
-                      child: Container(
-                        height: _height / 15,
-                        width: _width,
-                        margin: EdgeInsets.only(
-                          top: 10.0,
-                          bottom: 5.0,
-                        ),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5.0),
-                          ),
-                          color: MyColors.yellow,
-                        ),
-                        child: Text(
-                          "SAVE",
-                          style: MyTextStyle.button1,
-                        ),
-                      ),
-                    );
-                  case UpdateShopStatus.loading:
-                    return Container(
-                      height: _height / 15,
-                      width: _width,
-                      margin: EdgeInsets.only(
-                        top: 10.0,
-                        bottom: 5.0,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(5.0),
-                        ),
-                        color: MyColors.yellow,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: CircularProgressIndicator(
-                            color: MyColors.pureblack, strokeWidth: 2),
-                      ),
-                    );
-                }
-              },
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  getSelectionItem(int index, String name, bool isSelected) {
-    return Container(
-      alignment: Alignment.center,
-      child: Text(
-        name,
-        style: TextStyle(
-          fontSize: 15.0,
-          fontWeight: FontWeight.w400,
-          color: MyColors.pureblack,
-          fontFamily: 'Poppins',
-        ),
-        textAlign: TextAlign.center,
-      ),
-      decoration: BoxDecoration(
-          color: isSelected ? MyColors.yellow : Colors.white,
-          borderRadius: BorderRadius.circular(15)),
-    );
-  }
-
-  Widget getServiceItem(ModelService item) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 60,
-            color: MyColors.yellow,
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: Row(
-              children: [
-                Expanded(
-                    flex: 3,
-                    child: Text(
-                      item.name.toString(),
-                      style: MyTextStyle.button2,
-                    )),
-                Expanded(
-                    flex: 2,
-                    child: Text(
-                      '500',
-                      style: MyTextStyle.button1,
-                    )),
-                Expanded(child: Icon(Icons.add))
-              ],
-            ),
+          _buildFormField(
+              label: 'Shop name',
+              textEditingController: shopNameController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter shop name';
+                }
+                return null;
+              },
+              maxLength: 50),
+          Row(
+            children: [
+              _buildFormFieldLabel(label: 'Address'),
+              IconButton(
+                onPressed: () async {},
+                icon: Icon(Icons.my_location_rounded),
+              ),
+            ],
           ),
-          Visibility(child: Container())
+          _buildFormField(
+              label: 'House no./Flat no.',
+              textEditingController: shopNoController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter plot no.';
+                }
+                return null;
+              },
+              maxLength: 4),
+          _buildFormField(
+              label: 'Street/town',
+              textEditingController: streetController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter street name';
+                }
+                return null;
+              },
+              maxLength: 50),
+          Row(
+            children: [
+              Expanded(
+                child: _buildFormField(
+                    label: 'City',
+                    textEditingController: cityController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter city';
+                      }
+                      return null;
+                    },
+                    maxLength: 50),
+              ),
+              Expanded(
+                child: _buildFormField(
+                  label: 'Pin Code',
+                  textEditingController: pinCodeController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter pin code';
+                    }
+                    return null;
+                  },
+                  maxLength: 6,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+            ],
+          ),
+          _buildFormField(
+              label: 'Location',
+              readOnly: true,
+              maxLines: 1,
+              textEditingController: latlngController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please choose your location';
+                }
+                return null;
+              },
+              suffixIcon: InkWell(
+                child: Icon(Icons.my_location_rounded),
+                onTap: () async {
+                  PickedData pickedData = await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => LocationPicker(),
+                  ));
+                  setState(() {
+                    latlngController.text = pickedData.latLong.latitude.toString() +
+                        "," +
+                        pickedData.latLong.longitude.toString();
+                  });
+                },
+              )),
+          _buildFormField(
+              label: 'Description',
+              textEditingController: shopDescriptionController,
+              maxLength: 500,
+              maxLines: 7,
+              minLines: 3),
+          _buildUploadView(
+            title: 'Select shop photo',
+            file: shopPhoto,
+            data: (data) {
+              shopPhoto.fileName = data;
+            },
+            error: (_, __) {
+              shopPhoto.fileName = null;
+            },
+            loading: () => shopPhoto.fileName = null,
+          )
         ],
       ),
     );
   }
 
-  bool validateForm() {
-    if (shopAddress == null) {
-      showSnack('please mark your shop in map');
-      return false;
-    } else if (_shopName.text.isEmpty) {
-      showSnack('shop name should not be empty');
-      return false;
-    } else if (_shopNo.text.isEmpty) {
-      showSnack('shop no should not be empty');
-      return false;
-    } else if (_street.text.isEmpty) {
-      showSnack('street name should not be empty');
-      return false;
-    } else if (_city.text.isEmpty) {
-      showSnack('city should not be empty');
-      return false;
-    } else if (_pincode.text.isEmpty) {
-      showSnack('pincode should not be empty');
-      return false;
-    } else if (_landMark.text.isEmpty) {
-      showSnack('landmark should not be empty');
-      return false;
-    } else if (_shopDescription.text.isEmpty) {
-      showSnack('shop description should not be empty');
-      return false;
-    } else if (shopPic == null) {
-      showSnack('image should not be empty');
-      return false;
+  void updateShop() {
+    if (shopPhoto.fileName == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Please upload shop photo')));
+      return;
     }
-    return true;
-  }
 
-  void pickFromCamera(dynamic provider) async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-    if (image != null) {
-      ref.read(provider.notifier).state = File(image.path);
-    }
-    print(image);
-  }
-
-  void pickFromGallery(dynamic provider) async {
-    if (provider == profilePicProvider) {
-      Navigator.pop(context);
-    }
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      ref.read(provider.notifier).state = File(image.path);
-    }
-    print(image);
-  }
-
-  void uploadShop() async {
-    String shopAvatarUrl = await uploadFile(ref.watch(shopPicProvider)!);
     ShopEntity shop = ShopEntity(
-        shopName: _shopName.text,
-        shopDescription: _shopDescription.text,
-        shopNo: _shopNo.text,
-        street: _street.text,
-        city: _city.text,
-        pincode: _pincode.text,
-        avatarUrl: shopAvatarUrl,
-        latlng:
-            shopAddress!.lat.toString() + "," + shopAddress!.long.toString(),
-        partnerId: await ApiService().readPartnerId(),
-        landmark: _landMark.text);
+        shopName: shopNameController.text,
+        shopDescription: shopDescriptionController.text,
+        shopNo: shopNoController.text,
+        street: streetController.text,
+        city: cityController.text,
+        pincode: pinCodeController.text,
+        avatarUrl: shopPhoto.fileName,
+        //latlng: shopAddress!.lat.toString() + "," + shopAddress!.long.toString(),
+        partnerId: FirebaseAuth.instance.currentUser?.uid,
+        landmark: landmarkController.text);
 
-    await ref.read(shopInfoNotifierProvider.notifier).insertShopInfo(shop);
-    ShopState result = ref.watch(shopInfoNotifierProvider);
-    ApiService().saveToken(shopId: result.data!.value!.shopId!);
-
-    if (result != null && result.data != null) {
-      result.data!.when(
-          data: (data) {
-            if (data != null) {
-              if (data.shopId!.isNotEmpty) {
-                ref.refresh(registrationStatusProvider);
-              }
-            }
-          },
-          error: (err, errTxt) {
-            showSnack(err.toString());
-          },
-          loading: () {});
-    }
+    ref.read(updateShopControllerProvider.notifier).updateShop(shop);
   }
 
-  uploadFile(File file) async {
-    return await AwsS3.uploadFile(file: file);
+  Widget _buildFormFieldLabel({required String label}) {
+    return Text(
+      label,
+      style: MyTextStyle.formLabel,
+    );
   }
 
-  showMap(double width, double height) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return Consumer(builder: (context, ref, child) {
-            LatLng latlng = ref.watch(markerProvider);
-            final CameraPosition _kGooglePlex = CameraPosition(
-              target: latlng,
-              zoom: 12,
-            );
-            return Stack(
-              children: [
-                GoogleMap(
-                  markers: Set<Marker>.of([
-                    Marker(
-                      markerId: MarkerId(_kGooglePlex.toString()),
-                      position: latlng,
-                      icon: BitmapDescriptor.defaultMarkerWithHue(
-                          BitmapDescriptor.hueRed),
-                    )
-                  ]),
-                  initialCameraPosition: _kGooglePlex,
-                  onTap: (point) {
-                    setMarker(point);
-                  },
+  Widget _buildFormField({
+    required String label,
+    TextEditingController? textEditingController,
+    int? maxLength,
+    TextInputType? keyboardType,
+    FormFieldValidator? validator,
+    bool readOnly = false,
+    List<TextInputFormatter>? inputFormatters,
+    int? maxLines,
+    int? minLines,
+    Widget? suffixIcon,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(
+        bottom: 10.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildFormFieldLabel(label: label),
+          TextFormField(
+            maxLines: maxLines,
+            minLines: minLines,
+            inputFormatters: inputFormatters,
+            readOnly: readOnly,
+            validator: validator,
+            controller: textEditingController,
+            maxLength: maxLength,
+            keyboardType: keyboardType,
+            decoration: new InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.yellow,
+                  width: 2.0,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            var newPlace = await placemarkFromCoordinates(
-                                latlng.latitude, latlng.longitude);
-                            Placemark placeMark = newPlace[0];
-                            String? name = placeMark.name;
-                            String? subLocality = placeMark.subLocality;
-                            String? locality = placeMark.locality;
-                            String? administrativeArea =
-                                placeMark.administrativeArea;
-                            String? postalCode = placeMark.postalCode;
-                            String? country = placeMark.country;
-
-                            Navigator.pop(context);
-                            shopAddress = AddressModel(
-                                street: subLocality,
-                                city: locality,
-                                pincode: postalCode,
-                                lat: latlng.latitude,
-                                long: latlng.longitude);
-
-                            _street.text = subLocality!;
-                            _city.text = locality!;
-                            _pincode.text = postalCode!;
-                          },
-                          child: Text("SAVE")),
-                    )
-                  ],
-                )
-              ],
-            );
-          });
-        });
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.yellow,
+                  width: 2.0,
+                ),
+              ),
+              suffixIcon: suffixIcon,
+            ),
+            style: MyTextStyle.formTextField,
+          ),
+        ],
+      ),
+    );
   }
 
-  void setMarker(LatLng point) {
-    ref.read(markerProvider.notifier).state = point;
+  Widget _buildUploadView({
+    String title = '',
+    required AttachedImage file,
+    Function(String data)? data,
+    Function(Object error, StackTrace stackTrace)? error,
+    Function()? loading,
+  }) {
+    return StatefulBuilder(
+      builder: (BuildContext context, void Function(void Function()) setState) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: DottedBorder(
+              borderType: BorderType.RRect,
+              radius: Radius.circular(12),
+              padding: EdgeInsets.all(6),
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12),
+                ),
+                child: file.file == null
+                    ? Container(
+                        margin: EdgeInsets.all(
+                          20.0,
+                        ),
+                        width: double.infinity,
+                        child: Column(
+                          children: [
+                            Text(
+                              title,
+                              style: MyTextStyle.text4,
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Icon(
+                              Icons.image_outlined,
+                              color: AppColors.pureblack,
+                              size: 30.0,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                _buildCameraButton(
+                                  onTap: () async {
+                                    XFile? xFile =
+                                        await ImagePicker().pickImage(source: ImageSource.camera);
+                                    if (xFile != null) {
+                                      setState(() => file.file = xFile);
+                                    }
+                                  },
+                                ),
+                                _buildBrowseButton(
+                                  onTap: () async {
+                                    XFile? xFile =
+                                        await ImagePicker().pickImage(source: ImageSource.gallery);
+                                    if (xFile != null) {
+                                      setState(() => file.file = xFile);
+                                    }
+                                  },
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    : _buildImage(file.file!, onClose: () {
+                        setState(() => file.file = null);
+                      }, onData: data, onError: error, onLoading: loading),
+              )),
+        );
+      },
+    );
+  }
+
+  Widget _buildImage(
+    XFile file, {
+    GestureTapCallback? onClose,
+    Function(String data)? onData,
+    Function(Object error, StackTrace stackTrace)? onError,
+    Function()? onLoading,
+  }) {
+    return Container(
+      child: Stack(
+        children: [
+          Container(
+              color: Colors.deepPurple, child: Image.file(File(file.path), fit: BoxFit.cover)),
+          Positioned(
+            top: 0,
+            left: 0,
+            child: ref.watch(imageUploadControllerProvider(file)).when(
+              data: (data) {
+                if (onData != null) {
+                  onData(data ?? '');
+                }
+                return Container();
+              },
+              error: (error, stackTrace) {
+                if (onError != null) {
+                  onError(error, stackTrace);
+                }
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    child: Icon(Icons.error),
+                    onTap: () => ref.refresh(imageUploadControllerProvider(file)),
+                  ),
+                );
+              },
+              loading: () {
+                if (onLoading != null) {
+                  onLoading();
+                }
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CupertinoActivityIndicator(),
+                );
+              },
+            ),
+          ),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: onClose,
+                child: Icon(
+                  Icons.cancel_rounded,
+                  color: AppColors.red,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBrowseButton({GestureTapCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(5.0),
+          ),
+          color: AppColors.yellow,
+        ),
+        child: Text(
+          "Browse",
+          style: MyTextStyle.button1,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCameraButton({GestureTapCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(5.0),
+          ),
+          color: AppColors.yellow,
+        ),
+        child: Text(
+          "Camera",
+          style: MyTextStyle.button1,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSaveButton({required Widget child, final VoidCallback? onPressed}) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        height: _height / 15,
+        width: _width,
+        margin: EdgeInsets.only(
+          top: 20.0,
+        ),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(5.0),
+          ),
+          color: AppColors.yellow,
+        ),
+        child: child,
+      ),
+    );
   }
 }

@@ -17,7 +17,7 @@ import '../../entity/orderListEntity.dart';
 import '../../provider/mProvider/customerInfoProvider.dart';
 
 class OrderConfirm extends ConsumerStatefulWidget {
-  OrderListEntity? data;
+  WorkOrder? data;
 
   OrderConfirm({Key? key, this.data}) : super(key: key);
 
@@ -30,7 +30,7 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
   void initState() {
     ref
         .read(pendingOrderInfoNotifierProvider.notifier)
-        .getPendingOrders(widget.data!.customerId!, widget.data!.orderId!);
+        .getPendingOrders(widget.data!.consumerId!, widget.data!.orderId!);
   }
 
   @override
@@ -38,12 +38,12 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
     var selectedEmployee = 0;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColors.purewhite,
+        backgroundColor: AppColors.purewhite,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: MyColors.pureblack,
+            color: AppColors.pureblack,
           ),
           onPressed: () => Navigator.popAndPushNamed(context, '/homePage'),
         ),
@@ -105,7 +105,7 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                                             height: 115,
                                             width: 115,
                                             decoration: BoxDecoration(
-                                              border: Border.all(width: 1, color: MyColors.yellow),
+                                              border: Border.all(width: 1, color: AppColors.yellow),
                                               borderRadius: BorderRadius.circular(100),
                                             ),
                                           ),
@@ -113,7 +113,7 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                                             height: 100,
                                             width: 100,
                                             decoration: BoxDecoration(
-                                              color: MyColors.yellow,
+                                              color: AppColors.yellow,
                                               borderRadius: BorderRadius.circular(100),
                                             ),
                                             child: ClipRRect(
@@ -179,9 +179,9 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                                       },
                                       child: OrderButton(
                                         button_name: "Cancel order",
-                                        button_color: MyColors.purewhite,
-                                        text_color: MyColors.red,
-                                        border_color: MyColors.red,
+                                        button_color: AppColors.purewhite,
+                                        text_color: AppColors.red,
+                                        border_color: AppColors.red,
                                       ),
                                     ),
                                     TextButton(
@@ -197,9 +197,9 @@ class _OrderConfirmState extends ConsumerState<OrderConfirm> {
                                       },
                                       child: OrderButton(
                                         button_name: "Confirm order",
-                                        button_color: MyColors.purple,
-                                        text_color: MyColors.purewhite,
-                                        border_color: MyColors.purple,
+                                        button_color: AppColors.purple,
+                                        text_color: AppColors.purewhite,
+                                        border_color: AppColors.purple,
                                       ),
                                     ),
                                   ],

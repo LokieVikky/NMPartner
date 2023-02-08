@@ -9,17 +9,15 @@ class ItemCategory {
   ItemCategory.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    itemSubCategories = List.from(json['item_sub_categories'])
-        .map((e) => ItemSubCategories.fromJson(e))
-        .toList();
+    itemSubCategories =
+        List.from(json['item_sub_categories']).map((e) => ItemSubCategories.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['id'] = id;
     _data['name'] = name;
-    _data['item_sub_categories'] =
-        itemSubCategories.map((e) => e.toJson()).toList();
+    _data['item_sub_categories'] = itemSubCategories.map((e) => e.toJson()).toList();
     return _data;
   }
 
@@ -69,14 +67,11 @@ class ItemSubCategories {
     _data['id'] = id;
     _data['name'] = name;
     _data['category_id'] = categoryId;
-    _data['item_sub_category_brands'] =
-        itemSubCategoryBrands.map((e) => e.toJson()).toList();
+    _data['item_sub_category_brands'] = itemSubCategoryBrands.map((e) => e.toJson()).toList();
     return _data;
   }
 
-  ItemSubCategories(
-      this._id, this._name, this._categoryId, this._itemSubCategoryBrands);
-
+  ItemSubCategories(this._id, this._name, this._categoryId, this._itemSubCategoryBrands);
 
   bool get isSelected => _isSelected;
 
@@ -102,8 +97,7 @@ class ItemSubCategories {
     _categoryId = value;
   }
 
-  List<ItemSubCategoryBrands> get itemSubCategoryBrands =>
-      _itemSubCategoryBrands;
+  List<ItemSubCategoryBrands> get itemSubCategoryBrands => _itemSubCategoryBrands;
 
   set itemSubCategoryBrands(List<ItemSubCategoryBrands> value) {
     _itemSubCategoryBrands = value;
@@ -115,7 +109,7 @@ class ItemSubCategoryBrands {
     required this.brand,
   });
 
-   Brand? brand;
+  Brand? brand;
 
   ItemSubCategoryBrands.fromJson(Map<String, dynamic> json) {
     brand = Brand.fromJson(json['brand']);
@@ -148,8 +142,8 @@ class Brand {
   }
 
   Brand.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    id = json['id'];
+    name = json['brand']['name'];
+    id = json['brand']['id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -163,6 +157,11 @@ class Brand {
 
   set id(String value) {
     _id = value;
+  }
+
+  @override
+  String toString() {
+    return _id ?? '';
   }
 }
 

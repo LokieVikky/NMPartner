@@ -20,7 +20,7 @@ class EmployeeCarousel extends StatelessWidget {
           top: 20.0,
         ),
         decoration: BoxDecoration(
-          color: MyColors.lightYellow,
+          color: AppColors.lightYellow,
           borderRadius: BorderRadius.all(
             Radius.circular(20.0),
           ),
@@ -36,7 +36,7 @@ class EmployeeCarousel extends StatelessWidget {
               'name',
               style: TextStyle(
                 fontSize: 16.0,
-                color: MyColors.purple,
+                color: AppColors.purple,
               ),
               overflow: TextOverflow.ellipsis,
             ),

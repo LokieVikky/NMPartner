@@ -35,7 +35,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColors.purewhite,
+        backgroundColor: AppColors.purewhite,
         elevation: 5,
       ),
       body: Consumer(builder: (context, ref, child) {
@@ -56,13 +56,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           Header(
                             text: "Profile",
                             button_text: "Edit",
-                            bgColor: MyColors.purple,
-                            textColor: MyColors.purewhite,
+                            bgColor: AppColors.purple,
+                            textColor: AppColors.purewhite,
                             buttonVisibility: true,
                             path: EditProfilePage(state.profileEntity!.value),
                           ),
                           Container(
-                            color: MyColors.lightYellow,
+                            color: AppColors.lightYellow,
                             width: double.infinity,
                             child: Column(
                               children: [
@@ -77,7 +77,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             style: MyTextStyle.text1,
                           ),
                           Container(
-                            color: MyColors.lightYellow,
+                            color: AppColors.lightYellow,
                             width: double.infinity,
                             child: Services(services!),
                           ),
@@ -86,8 +86,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             button_text: "See All",
                             path: AllRevivews(
                                 state.profileEntity!.value!.reviews!),
-                            bgColor: MyColors.purple,
-                            textColor: MyColors.purewhite,
+                            bgColor: AppColors.purple,
+                            textColor: AppColors.purewhite,
                             buttonVisibility: reviews!.isNotEmpty,
                           ),
                           reviews.isEmpty
@@ -101,7 +101,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   ),
                                 )
                               : Container(
-                                  color: MyColors.lightYellow,
+                                  color: AppColors.lightYellow,
                                   width: double.infinity,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -138,9 +138,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             Radius.circular(5.0),
           ),
           border: Border.all(
-            color: MyColors.yellow,
+            color: AppColors.yellow,
           ),
-          color: MyColors.purewhite,
+          color: AppColors.purewhite,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

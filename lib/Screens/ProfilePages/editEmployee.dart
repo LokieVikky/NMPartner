@@ -15,12 +15,12 @@ class EditEmployee extends StatelessWidget {
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColors.purewhite,
+        backgroundColor: AppColors.purewhite,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: MyColors.pureblack,
+            color: AppColors.pureblack,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -71,7 +71,7 @@ class EditEmployee extends StatelessWidget {
                 height: _height / 12,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: MyColors.purple2,
+                  color: AppColors.purple2,
                   borderRadius: BorderRadius.all(
                     Radius.circular(10.0),
                   ),

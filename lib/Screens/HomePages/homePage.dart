@@ -13,10 +13,10 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  final _selectedItemColor = MyColors.purewhite;
-  final _unselectedItemColor = MyColors.purple1;
-  final _selectedBgColor = MyColors.purple1;
-  final _unselectedBgColor = MyColors.purewhite;
+  final _selectedItemColor = AppColors.purewhite;
+  final _unselectedItemColor = AppColors.purple1;
+  final _selectedBgColor = AppColors.purple1;
+  final _unselectedBgColor = AppColors.purewhite;
   int currentState = 0;
 
   static List<Widget> _widgetOptions = <Widget>[

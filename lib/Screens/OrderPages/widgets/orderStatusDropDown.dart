@@ -8,7 +8,7 @@ import '../../../provider/mProvider/ordersProvider.dart';
 
 class OrderStatusDropDown extends ConsumerStatefulWidget {
   List<String>? statusList = [];
-  OrderListEntity? data;
+  WorkOrder? data;
 
   OrderStatusDropDown(this.data, {Key? key}) : super(key: key);
 
@@ -41,7 +41,7 @@ class _OrderStatusDropDownState extends ConsumerState<OrderStatusDropDown> {
                     child: Text(value),
                   );
                 }).toList(),
-                hint: Text(widget.data!.orderStatus.toString()),
+                //hint: Text(widget.data!.orderStatus.toString()),
                 isExpanded: true,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(borderSide: BorderSide(color: Colors.yellow, width: 1.0)),

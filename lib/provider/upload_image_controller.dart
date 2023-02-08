@@ -37,8 +37,10 @@ class ImageUploadController extends StateNotifier<AsyncValue<String?>> {
         final respJson = jsonDecode(respStr);
         return respJson['fileName'];
       }
+      print(await response.stream.bytesToString());
       throw Exception(await response.stream.bytesToString());
     } catch (e) {
+      print(e);
       rethrow;
     }
   }

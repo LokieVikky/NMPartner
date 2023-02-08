@@ -2,6 +2,8 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:partner/provider/providers.dart';
+import 'package:partner/shared/custom_widgets.dart';
 import 'package:partner/values/MyColors.dart';
 import 'package:uuid/uuid.dart';
 
@@ -55,6 +57,14 @@ class _ShopServicesState extends ConsumerState<ShopServices> {
               ),
             ],
           ),
+          ref.watch(serviceListProvider).when(data:(data){
+            if(data.isEmpty){
+              return Text('No Service Available');
+            }
+            return ListView.builder(itemBuilder: (context,index){
+              return Container();
+            });
+          } , error: (_,__)=>AppErrorWidget(onPressed: ()=>ref.refresh(serviceListProvider),), loading: ()=>CupertinoActivityIndicator()),
           Consumer(builder: (context, ref, child) {
             Map<String, ModelService> data = ref.watch(serviceNotifierProvider);
             List<ModelService> selectedList = [];
@@ -112,13 +122,13 @@ class _ShopServicesState extends ConsumerState<ShopServices> {
                                   counterText: '',
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
@@ -153,13 +163,13 @@ class _ShopServicesState extends ConsumerState<ShopServices> {
                                   counterText: '',
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
@@ -250,7 +260,7 @@ class _ShopServicesState extends ConsumerState<ShopServices> {
       child: Container(
         height: 50,
         decoration: BoxDecoration(
-            color: MyColors.yellow,
+            color: AppColors.yellow,
             borderRadius: BorderRadius.all(Radius.circular(5.0))),
         child: Row(
           children: [
@@ -298,7 +308,7 @@ class _ShopServicesState extends ConsumerState<ShopServices> {
       padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
       child: Container(
           decoration: BoxDecoration(
-              color: MyColors.grey,
+              color: AppColors.grey,
               borderRadius: BorderRadius.all(Radius.circular(5.0))),
           child: Column(
             children: [

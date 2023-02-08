@@ -19,11 +19,11 @@ class _AllRevivewsState extends State<AllRevivews> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColors.purewhite,
+        backgroundColor: AppColors.purewhite,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: MyColors.pureblack,
+            color: AppColors.pureblack,
           ),
           onPressed: () => Navigator.popAndPushNamed(context, '/homePage'),
         ),
@@ -49,9 +49,9 @@ class _AllRevivewsState extends State<AllRevivews> {
             Radius.circular(5.0),
           ),
           border: Border.all(
-            color: MyColors.yellow,
+            color: AppColors.yellow,
           ),
-          color: MyColors.purewhite,
+          color: AppColors.purewhite,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

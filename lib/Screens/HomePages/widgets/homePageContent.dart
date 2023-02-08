@@ -39,7 +39,7 @@ class _HomePageContentState extends ConsumerState<HomePageContent> {
                 style: TextStyle(
                   fontSize: 30.0,
                   fontWeight: FontWeight.w600,
-                  color: MyColors.purple,
+                  color: AppColors.purple,
                   fontFamily: 'Roboto',
                 ),
               ),

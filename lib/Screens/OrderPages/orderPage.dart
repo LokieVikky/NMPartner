@@ -17,7 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../provider/mProvider/commanProviders.dart';
 
 class OrderPage extends ConsumerStatefulWidget {
-  OrderListEntity? data;
+  WorkOrder? data;
 
   OrderPage({Key? key, this.data}) : super(key: key);
 
@@ -31,7 +31,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       ref
           .read(pendingOrderInfoNotifierProvider.notifier)
-          .getPendingOrders(widget.data!.customerId!, widget.data!.orderId!);
+          .getPendingOrders(widget.data!.consumerId!, widget.data!.orderId!);
     });
   }
 
@@ -41,12 +41,12 @@ class _OrderPageState extends ConsumerState<OrderPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColors.purewhite,
+        backgroundColor: AppColors.purewhite,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: MyColors.pureblack,
+            color: AppColors.pureblack,
           ),
           onPressed: () => Navigator.popAndPushNamed(context, '/homePage'),
         ),
@@ -137,7 +137,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                             decoration: BoxDecoration(
                                               border: Border.all(
                                                   width: 1,
-                                                  color: MyColors.yellow),
+                                                  color: AppColors.yellow),
                                               borderRadius:
                                                   BorderRadius.circular(100),
                                             ),
@@ -146,7 +146,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                             height: 100,
                                             width: 100,
                                             decoration: BoxDecoration(
-                                              color: MyColors.yellow,
+                                              color: AppColors.yellow,
                                               borderRadius:
                                                   BorderRadius.circular(100),
                                             ),
@@ -231,7 +231,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                         height: size.height / 12,
                                         width: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: MyColors.purple2,
+                                          color: AppColors.purple2,
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(10.0),
                                           ),
@@ -242,7 +242,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                                             style: TextStyle(
                                               fontSize: 18.0,
                                               fontWeight: FontWeight.w600,
-                                              color: MyColors.purewhite,
+                                              color: AppColors.purewhite,
                                               fontFamily: 'Poppins',
                                             ),
                                           ),

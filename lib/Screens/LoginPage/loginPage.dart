@@ -165,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.all(
                                 Radius.circular(5.0),
                               ),
-                              color: MyColors.shopButton,
+                              color: AppColors.shopButton,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -182,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                                   padding: const EdgeInsets.only(right: 20.0),
                                   child: Icon(
                                     Icons.arrow_forward_sharp,
-                                    color: MyColors.yellowish,
+                                    color: AppColors.yellowish,
                                   ),
                                 ),
                               ],

@@ -7,7 +7,7 @@ import '../../../entity/orderListEntity.dart';
 
 class ProblemDetails extends StatelessWidget {
   double Box_Radius = 15.0;
-  OrderListEntity? data;
+  WorkOrder? data;
   List<ModelService> ? serviceList;
   double chargePrice = 0;
 
@@ -22,7 +22,7 @@ class ProblemDetails extends StatelessWidget {
       margin: EdgeInsets.only(
         bottom: 20.0,),
       decoration: BoxDecoration(
-        color: MyColors.yellow1,
+        color: AppColors.yellow1,
       ),
       child: Column(
         children: [
@@ -47,12 +47,12 @@ class ProblemDetails extends StatelessWidget {
             height: _height / 5,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: MyColors.purewhite,
+              color: AppColors.purewhite,
               borderRadius: BorderRadius.all(
                 Radius.circular(Box_Radius),
               ),
               border: Border.all(
-                color: MyColors.yellow,
+                color: AppColors.yellow,
               ),
             ),
             alignment: Alignment.topLeft,
@@ -65,7 +65,7 @@ class ProblemDetails extends StatelessWidget {
                   height: 1.4,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w400,
-                  color: MyColors.purple,
+                  color: AppColors.purple,
                   fontFamily: 'Poppins',
                 )),
           ),
@@ -111,9 +111,9 @@ class ProblemDetails extends StatelessWidget {
             ),
             width: double.infinity,
             decoration: BoxDecoration(
-              color: MyColors.purewhite,
+              color: AppColors.purewhite,
               border: Border.all(
-                color: MyColors.yellow,
+                color: AppColors.yellow,
               ),
               borderRadius: BorderRadius.all(
                 Radius.circular(Box_Radius),
@@ -140,7 +140,7 @@ class ProblemDetails extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(2),
                                 border: Border.all(
                                   width: 2,
-                                  color: MyColors.grey,
+                                  color: AppColors.grey,
                                 ),
                               ),
                               child: Container(
@@ -148,7 +148,7 @@ class ProblemDetails extends StatelessWidget {
                                 width: 15,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(2),
-                                  color: MyColors.purple,
+                                  color: AppColors.purple,
                                 ),
                               ),
                             ),
@@ -197,9 +197,9 @@ class ProblemDetails extends StatelessWidget {
             ),
             width: double.infinity,
             decoration: BoxDecoration(
-              color: MyColors.purewhite,
+              color: AppColors.purewhite,
               border: Border.all(
-                color: MyColors.yellow,
+                color: AppColors.yellow,
               ),
               borderRadius: BorderRadius.all(
                 Radius.circular(Box_Radius),

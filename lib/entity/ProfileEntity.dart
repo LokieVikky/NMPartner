@@ -4,13 +4,16 @@ import 'package:partner/entity/shopInfoEntity.dart';
 import '../models/mModel/modelService.dart';
 
 class ProfileEntity {
-  // todo should add services
   List<ReviewEntity>? reviews;
   ShopEntity? shopEntity;
-  List<ModelService>? shopService;
+  List<NMService>? shopService;
   PartnerInfoEntity? partnerInfoEntity;
 
   ProfileEntity({this.reviews, this.shopEntity, this.shopService, this.partnerInfoEntity});
+
+  ProfileEntity.fromJson(Map json){
+
+  }
 }
 
 class ReviewEntity {
@@ -21,4 +24,11 @@ class ReviewEntity {
 
   ReviewEntity(
       {this.reviewBy, this.reviewDate, this.reviewRating, this.reviewContent});
+
+  ReviewEntity.fromJson(Map json){
+    reviewBy = json['consumer']['name'];
+    reviewDate = json['date'];
+    reviewRating = json['rating'];
+    reviewContent = json['review'];
+  }
 }

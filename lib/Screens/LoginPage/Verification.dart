@@ -62,7 +62,7 @@ class _VerificationState extends ConsumerState<Verification> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(
-                      color: MyColors.yellow, strokeWidth: 6),
+                      color: AppColors.yellow, strokeWidth: 6),
                 ],
               ),
             ],
@@ -105,7 +105,7 @@ class _VerificationState extends ConsumerState<Verification> {
                         borderRadius: BorderRadius.all(
                           Radius.circular(20.0),
                         ),
-                        color: MyColors.lightgrey3,
+                        color: AppColors.lightgrey3,
                       ),
                     ),
                   ),
@@ -213,7 +213,7 @@ class _VerificationState extends ConsumerState<Verification> {
                       borderRadius: BorderRadius.all(
                         Radius.circular(5.0),
                       ),
-                      color: MyColors.shopButton,
+                      color: AppColors.shopButton,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -230,7 +230,7 @@ class _VerificationState extends ConsumerState<Verification> {
                           ),
                           Icon(
                             Icons.arrow_forward_sharp,
-                            color: MyColors.yellowish,
+                            color: AppColors.yellowish,
                           ),
                         ],
                       ),

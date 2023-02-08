@@ -76,12 +76,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColors.purewhite,
+        backgroundColor: AppColors.purewhite,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: MyColors.pureblack,
+            color: AppColors.pureblack,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -144,13 +144,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                 decoration: new InputDecoration(
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
@@ -194,13 +194,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                 decoration: new InputDecoration(
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
@@ -260,13 +260,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                       decoration: new InputDecoration(
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
@@ -308,13 +308,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                       decoration: new InputDecoration(
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
@@ -360,13 +360,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                           decoration: new InputDecoration(
                                             focusedBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                color: MyColors.yellow,
+                                                color: AppColors.yellow,
                                                 width: 2.0,
                                               ),
                                             ),
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                color: MyColors.yellow,
+                                                color: AppColors.yellow,
                                                 width: 2.0,
                                               ),
                                             ),
@@ -410,13 +410,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                           decoration: new InputDecoration(
                                             focusedBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                color: MyColors.yellow,
+                                                color: AppColors.yellow,
                                                 width: 2.0,
                                               ),
                                             ),
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                color: MyColors.yellow,
+                                                color: AppColors.yellow,
                                                 width: 2.0,
                                               ),
                                             ),
@@ -460,13 +460,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                       decoration: new InputDecoration(
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
@@ -525,13 +525,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                 decoration: new InputDecoration(
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
@@ -577,13 +577,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                 decoration: new InputDecoration(
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: MyColors.yellow,
+                                      color: AppColors.yellow,
                                       width: 2.0,
                                     ),
                                   ),
@@ -643,13 +643,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                       decoration: new InputDecoration(
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
@@ -691,13 +691,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                       decoration: new InputDecoration(
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
@@ -743,13 +743,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                           decoration: new InputDecoration(
                                             focusedBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                color: MyColors.yellow,
+                                                color: AppColors.yellow,
                                                 width: 2.0,
                                               ),
                                             ),
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                color: MyColors.yellow,
+                                                color: AppColors.yellow,
                                                 width: 2.0,
                                               ),
                                             ),
@@ -793,13 +793,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                           decoration: new InputDecoration(
                                             focusedBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                color: MyColors.yellow,
+                                                color: AppColors.yellow,
                                                 width: 2.0,
                                               ),
                                             ),
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                color: MyColors.yellow,
+                                                color: AppColors.yellow,
                                                 width: 2.0,
                                               ),
                                             ),
@@ -843,13 +843,13 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                       decoration: new InputDecoration(
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: MyColors.yellow,
+                                            color: AppColors.yellow,
                                             width: 2.0,
                                           ),
                                         ),
@@ -910,7 +910,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                             borderRadius: BorderRadius.all(
                               Radius.circular(5.0),
                             ),
-                            color: MyColors.yellow,
+                            color: AppColors.yellow,
                           ),
                           child: Text(
                             "SAVE",

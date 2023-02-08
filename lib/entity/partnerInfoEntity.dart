@@ -35,4 +35,7 @@ class PartnerInfoEntity {
         this.partnerProfilePic,
         this.partnerID,
         this.partnerPanNo,});
+
+
+
 }

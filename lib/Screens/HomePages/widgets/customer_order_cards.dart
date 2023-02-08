@@ -15,7 +15,7 @@ class CustomerOrderCards extends StatelessWidget {
       ),
       padding: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        color: MyColors.purple,
+        color: AppColors.purple,
         borderRadius: BorderRadius.all(
           Radius.circular(10.0),
         ),
@@ -43,7 +43,7 @@ class CustomerOrderCards extends StatelessWidget {
               lineLength: double.infinity,
               lineThickness: 1.2,
               dashLength: 4.0,
-              dashColor: MyColors.purewhite,
+              dashColor: AppColors.purewhite,
               dashRadius: 0.0,
               dashGapLength: 4.0,
               dashGapColor: Colors.transparent,
@@ -64,7 +64,7 @@ class CustomerOrderCards extends StatelessWidget {
                       height: 115,
                       width: 115,
                       decoration: BoxDecoration(
-                        border: Border.all(width: 1, color: MyColors.yellow),
+                        border: Border.all(width: 1, color: AppColors.yellow),
                         borderRadius: BorderRadius.circular(100),
                       ),
                     ),
@@ -72,7 +72,7 @@ class CustomerOrderCards extends StatelessWidget {
                       height: 100,
                       width: 100,
                       decoration: BoxDecoration(
-                        color: MyColors.yellow,
+                        color: AppColors.yellow,
                         borderRadius: BorderRadius.circular(100),
                         image: DecorationImage(
                           image: AssetImage('assets/images/profile.png'),
@@ -130,7 +130,7 @@ class CustomerOrderCards extends StatelessWidget {
               bottom: 20.0,
             ),
             decoration: BoxDecoration(
-              color: MyColors.purewhite,
+              color: AppColors.purewhite,
               borderRadius: BorderRadius.all(
                 Radius.circular(5),
               ),
@@ -141,7 +141,7 @@ class CustomerOrderCards extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.w600,
-                  color: MyColors.pureblack,
+                  color: AppColors.pureblack,
                   fontFamily: 'Roboto',
                 ),
               ),

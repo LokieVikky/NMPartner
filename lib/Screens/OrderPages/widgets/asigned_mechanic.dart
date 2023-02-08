@@ -11,7 +11,7 @@ class AsignedMechanic extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: MyColors.purple,
+        color: AppColors.purple,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(10.0),
           topRight: Radius.circular(10.0),

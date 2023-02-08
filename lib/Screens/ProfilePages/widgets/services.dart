@@ -5,7 +5,7 @@ import 'package:partner/values/MyTextstyle.dart';
 import 'package:flutter/material.dart';
 
 class Services extends StatefulWidget {
-  List<ModelService> services = [];
+  List<NMService> services = [];
   Services(this.services, {Key? key}) : super(key: key);
 
   @override
@@ -61,9 +61,9 @@ class _ServicesState extends State<Services> {
                 Radius.circular(20.0),
               ),
               border: Border.all(
-                color: MyColors.yellow,
+                color: AppColors.yellow,
               ),
-              color: MyColors.purewhite,
+              color: AppColors.purewhite,
             ),
             child: Column(
               children: [
@@ -86,16 +86,16 @@ class _ServicesState extends State<Services> {
     );
   }
 
-  getShopServiceItem(ModelService service) {
+  getShopServiceItem(NMService service) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          service.name,
+          service.name??'',
           style: MyTextStyle.text4,
         ),
         Text(
-          '₹ ' + service.amount,
+          '₹ ' + service.rate.toString(),
           style: MyTextStyle.text4,
         ),
       ],

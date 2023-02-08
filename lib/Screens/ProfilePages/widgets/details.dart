@@ -31,7 +31,7 @@ class _DetailsState extends State<Details> {
           bottom: 20.0,
         ),
         decoration: BoxDecoration(
-            color: MyColors.yellow2,
+            color: AppColors.yellow2,
             borderRadius: BorderRadius.all(
               Radius.circular(20.0),
             )),
@@ -45,7 +45,7 @@ class _DetailsState extends State<Details> {
                   width: 115,
                   height: 115,
                   decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: MyColors.pureblack),
+                    border: Border.all(width: 1, color: AppColors.pureblack),
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: ClipRRect(

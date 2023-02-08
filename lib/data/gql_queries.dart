@@ -83,8 +83,8 @@ query MyQuery {
 ''';
 
   static const String queryGetSubcategory = r'''
-query MyQuery($list: [uuid!]){
-  namma_mechanics_item_sub_category(where: {category_id: {_in: $list}}) {
+query MyQuery($_eq: uuid = "") {
+  namma_mechanics_item_sub_category(where: {category_id: {_eq: $_eq}}) {
     category_id
     name
     description
@@ -93,12 +93,16 @@ query MyQuery($list: [uuid!]){
     id
   }
 }
+
 ''';
 
   static const String queryBrands = r'''
-query MyQuery($list: [uuid!]){
-    namma_mechanics_item_sub_category_brand(where: {sub_category_id: {_in: $list}}) {
-    brand_id
+query MyQuery($_eq: uuid = "") {
+  namma_mechanics_item_sub_category_brand(where: {sub_category_id: {_eq: $_eq}}) {
+    brand {
+      name
+      id
+    }
   }
 }
 ''';
@@ -148,7 +152,7 @@ query MyQuery {
 ''';
 
   static const String insertShopInfo = r'''
-mutation MyMutation($avatar: String = "", $desc: String = "", $name: String = "", $partnerID: uuid = "") {
+mutation MyMutation($avatar: String = "", $desc: String = "", $name: String = "", $partnerID: String = "") {
   insert_namma_mechanics_shop(objects: {avatar: $avatar, description: $desc, name: $name, enabled: true, partner_id: $partnerID}) {
     returning {
       id

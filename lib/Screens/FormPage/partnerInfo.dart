@@ -12,16 +12,12 @@ import 'package:partner/provider/providers.dart';
 import 'package:partner/provider/update_partner_controller.dart';
 import 'package:partner/provider/upload_image_controller.dart';
 import 'package:partner/shared/async_value_ui.dart';
+import 'package:partner/shared/attached_image.dart';
 import '../../entity/partnerInfoEntity.dart';
 import '../../values/MyColors.dart';
 import '../../values/MyTextstyle.dart';
 
-class AttachedImage {
-  XFile? file;
-  String? fileName;
 
-  AttachedImage(this.file);
-}
 
 class PartnerInfo extends ConsumerStatefulWidget {
   const PartnerInfo({Key? key}) : super(key: key);
@@ -143,7 +139,7 @@ class _PartnerInfoState extends ConsumerState<PartnerInfo> {
           borderRadius: BorderRadius.all(
             Radius.circular(5.0),
           ),
-          color: MyColors.yellow,
+          color: AppColors.yellow,
         ),
         child: child,
       ),
@@ -382,7 +378,7 @@ class _PartnerInfoState extends ConsumerState<PartnerInfo> {
             height: 115,
             width: 115,
             decoration: BoxDecoration(
-              border: Border.all(width: 1, color: MyColors.purple),
+              border: Border.all(width: 1, color: AppColors.purple),
               borderRadius: BorderRadius.circular(100),
             ),
             child: profile.file == null
@@ -450,7 +446,7 @@ class _PartnerInfoState extends ConsumerState<PartnerInfo> {
                             ),
                             Icon(
                               Icons.image_outlined,
-                              color: MyColors.pureblack,
+                              color: AppColors.pureblack,
                               size: 30.0,
                             ),
                             Row(
@@ -542,7 +538,7 @@ class _PartnerInfoState extends ConsumerState<PartnerInfo> {
                 onTap: onClose,
                 child: Icon(
                   Icons.cancel_rounded,
-                  color: MyColors.red,
+                  color: AppColors.red,
                 ),
               ),
             ),
@@ -562,7 +558,7 @@ class _PartnerInfoState extends ConsumerState<PartnerInfo> {
           borderRadius: BorderRadius.all(
             Radius.circular(5.0),
           ),
-          color: MyColors.yellow,
+          color: AppColors.yellow,
         ),
         child: Text(
           "Browse",
@@ -582,7 +578,7 @@ class _PartnerInfoState extends ConsumerState<PartnerInfo> {
           borderRadius: BorderRadius.all(
             Radius.circular(5.0),
           ),
-          color: MyColors.yellow,
+          color: AppColors.yellow,
         ),
         child: Text(
           "Camera",
@@ -591,7 +587,6 @@ class _PartnerInfoState extends ConsumerState<PartnerInfo> {
       ),
     );
   }
-
 
   Future<XFile?> pickProfileImage() async {
     XFile? file;
@@ -616,8 +611,8 @@ class _PartnerInfoState extends ConsumerState<PartnerInfo> {
                     file = await ImagePicker().pickImage(source: ImageSource.camera);
                   },
                   child: CircleAvatar(
-                      child: Icon(Icons.camera_alt, color: MyColors.pureblack, size: 30),
-                      backgroundColor: MyColors.yellow,
+                      child: Icon(Icons.camera_alt, color: AppColors.pureblack, size: 30),
+                      backgroundColor: AppColors.yellow,
                       radius: 40),
                 ),
                 GestureDetector(
@@ -625,8 +620,8 @@ class _PartnerInfoState extends ConsumerState<PartnerInfo> {
                     file = await ImagePicker().pickImage(source: ImageSource.gallery);
                   },
                   child: CircleAvatar(
-                      child: Icon(Icons.image, color: MyColors.pureblack, size: 30),
-                      backgroundColor: MyColors.yellow,
+                      child: Icon(Icons.image, color: AppColors.pureblack, size: 30),
+                      backgroundColor: AppColors.yellow,
                       radius: 40),
                 ),
               ],
@@ -669,13 +664,13 @@ class _PartnerInfoState extends ConsumerState<PartnerInfo> {
             decoration: new InputDecoration(
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: MyColors.yellow,
+                  color: AppColors.yellow,
                   width: 2.0,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: MyColors.yellow,
+                  color: AppColors.yellow,
                   width: 2.0,
                 ),
               ),

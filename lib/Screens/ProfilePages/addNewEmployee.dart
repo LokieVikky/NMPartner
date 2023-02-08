@@ -73,7 +73,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                   height: 115,
                   width: 115,
                   decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: MyColors.purple),
+                    border: Border.all(width: 1, color: AppColors.purple),
                     borderRadius: BorderRadius.circular(100),
                   ),
                 ),
@@ -89,13 +89,13 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                       height: 100,
                       width: 100,
                       decoration: BoxDecoration(
-                        color: MyColors.purple,
+                        color: AppColors.purple,
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: Center(
                         child: Icon(
                           Icons.camera_alt_outlined,
-                          color: MyColors.purewhite,
+                          color: AppColors.purewhite,
                           size: 30.0,
                         ),
                       ),
@@ -131,7 +131,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                 controller: _controller,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: MyColors.yellow),
+                    borderSide: BorderSide(color: AppColors.yellow),
                   ),
                 ),
                 style: TextStyle(
@@ -153,7 +153,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                       Radius.circular(5.0),
                     ),
                     border: Border.all(
-                      color: MyColors.purple,
+                      color: AppColors.purple,
                     ),
                   ),
                   child: Center(
@@ -223,9 +223,9 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                       Radius.circular(5.0),
                     ),
                     border: Border.all(
-                      color: MyColors.purple,
+                      color: AppColors.purple,
                     ),
-                    color: MyColors.purple,
+                    color: AppColors.purple,
                   ),
                   child: Center(
                     child: Text(

@@ -32,8 +32,8 @@ class Balance extends StatelessWidget {
               ),
               CustomButton(
                 button_text: "Add money",
-                bgColor: MyColors.purple,
-                textColor: MyColors.purewhite,
+                bgColor: AppColors.purple,
+                textColor: AppColors.purewhite,
               ),
             ],
           ),
@@ -58,7 +58,7 @@ class Balance extends StatelessWidget {
               CustomButton(
                 button_text: "Transactions",
                 bgColor: Colors.transparent,
-                textColor: MyColors.purple,
+                textColor: AppColors.purple,
               ),
             ],
           ),

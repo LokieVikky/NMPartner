@@ -1,3 +1,5 @@
+import 'package:partner/shared/helper.dart';
+
 class ShopEntity {
   String? shopName;
   String? shopDescription;
@@ -23,4 +25,18 @@ class ShopEntity {
       this.partnerId,
       this.shopId,
       this.avatarUrl});
+
+  ShopEntity.fromJson(Map json) {
+    shopName = json['name'];
+    shopDescription = json['description'];
+    shopNo = helper.getFirstIndexValue(json['addresses'], key: 'house_no');
+    street = helper.getFirstIndexValue(json['addresses'], key: 'apartment_road_area');
+    city = helper.getFirstIndexValue(json['addresses'], key: 'city');
+    pincode = helper.getFirstIndexValue(json['addresses'], key: 'pincode');
+    landmark = helper.getFirstIndexValue(json['landmark'], key: 'pincode');
+    latlng = json[''];
+    partnerId = json[''];
+    shopId = json[''];
+    avatarUrl = json[''];
+  }
 }

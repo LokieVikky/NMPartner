@@ -288,9 +288,9 @@ class ApiService {
 
   getCategoryList() async {
     dynamic result = await _getQueryResult(queryGetCategory);
-    List<CategoryModel> mList = [];
+    List<NMCategory> mList = [];
     for (dynamic element in result!.data['namma_mechanics_item_category']) {
-      mList.add(CategoryModel(
+      mList.add(NMCategory(
         name: element['name'],
         categoryID: element['id'],
         // todo should add others
@@ -306,10 +306,10 @@ class ApiService {
     dynamic result =
     await _getQueryResult(queryGetSubcategory, queryOptions: options);
 
-    List<ModelItemSubCategory> mModel = [];
+    List<SubCategory> mModel = [];
 
     for (dynamic element in result.data['namma_mechanics_item_sub_category']) {
-      mModel.add(ModelItemSubCategory(
+      mModel.add(SubCategory(
           subCategoryId: element['id'],
           subCategoryName: element['name'],
           subCategoryIsSelected: false));
@@ -374,15 +374,15 @@ class ApiService {
     // await readShopId()
     var result =
     await _getQueryResult(getPlacedOrdersList, queryOptions: options);
-    List<OrderListEntity> entities = [];
+    List<WorkOrder> entities = [];
 
     for (dynamic element in result.data['namma_mechanics_order']) {
-      entities.add(OrderListEntity(
-          description: element['description'],
-          orderId: element['id'],
-          amount: element['amount'],
-          placedOn: element['placed_on'],
-          customerId: element['consumer_id']));
+      // entities.add(WorkOrder(
+      //     description: element['description'],
+      //     orderId: element['id'],
+      //     amount: element['amount'],
+      //     placedOn: element['placed_on'],
+      //     customerId: element['consumer_id']));
     }
     print(result.toString());
     return entities;
@@ -425,16 +425,16 @@ class ApiService {
     final result =
     await _getQueryResult(queryGetActionRequired, queryOptions: options);
 
-    List<OrderListEntity> mList = [];
-    for (dynamic element in result.data['namma_mechanics_order']) {
-      mList.add(OrderListEntity(
-          customerId: element['consumer_id'],
-          placedOn: element['placed_on'],
-          amount: element['amount'],
-          description: element['description'],
-          orderId: element['id'],
-          orderStatus: element['order_status_details'][0]['status']));
-    }
+    List<WorkOrder> mList = [];
+    // for (dynamic element in result.data['namma_mechanics_order']) {
+    //   mList.add(WorkOrder(
+    //       customerId: element['consumer_id'],
+    //       placedOn: element['placed_on'],
+    //       amount: element['amount'],
+    //       description: element['description'],
+    //       orderId: element['id'],
+    //       orderStatus: element['order_status_details'][0]['status']));
+    // }
     print(result);
     return mList;
   }
@@ -480,10 +480,10 @@ class ApiService {
         landmark: shop['addresses'][0]['landmark'],
         pincode: shop['addresses'][0]['pincode']);
 
-    List<ModelService> serviceList = [];
+    List<NMService> serviceList = [];
     for (var element in services) {
-      serviceList.add(
-          ModelService(element['name'], element['amount'], false, null, false));
+      // serviceList.add(
+      //     Service(element['name'], element['amount'], false, null, false));
     }
 
     ProfileEntity profileEntity = ProfileEntity(

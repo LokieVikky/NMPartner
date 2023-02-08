@@ -9,7 +9,7 @@ import 'package:partner/values/MyColors.dart';
 import 'package:partner/values/MyTextstyle.dart';
 
 class OnGoingOrderCard extends ConsumerStatefulWidget {
-  OrderListEntity? entity;
+  WorkOrder? entity;
 
   // TYPE 0 - pending Orders | 1 - actionRequired Orders
   int? screenType;
@@ -31,7 +31,7 @@ class _OnGoingOrderCardState extends ConsumerState<OnGoingOrderCard> {
       ),
       padding: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        color: MyColors.purple,
+        color: AppColors.purple,
         borderRadius: BorderRadius.all(
           Radius.circular(10.0),
         ),
@@ -67,7 +67,7 @@ class _OnGoingOrderCardState extends ConsumerState<OnGoingOrderCard> {
               lineLength: double.infinity,
               lineThickness: 1.5,
               dashLength: 4.0,
-              dashColor: MyColors.purewhite,
+              dashColor: AppColors.purewhite,
               dashRadius: 0.0,
               dashGapLength: 4.0,
               dashGapColor: Colors.transparent,
@@ -93,7 +93,8 @@ class _OnGoingOrderCardState extends ConsumerState<OnGoingOrderCard> {
                 widget.screenType == 1
                     ? VehicleInfoHome(
                         vehicle: "Status:",
-                        value: widget.entity!.orderStatus!,
+                        //value: widget.entity!.orderStatus!,
+                        value: 'widget.entity!.orderStatus!',
                       )
                     : SizedBox(),
               ],
@@ -121,7 +122,7 @@ class _OnGoingOrderCardState extends ConsumerState<OnGoingOrderCard> {
                 bottom: 20.0,
               ),
               decoration: BoxDecoration(
-                color: MyColors.purewhite,
+                color: AppColors.purewhite,
                 borderRadius: BorderRadius.all(
                   Radius.circular(5),
                 ),
@@ -132,7 +133,7 @@ class _OnGoingOrderCardState extends ConsumerState<OnGoingOrderCard> {
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600,
-                    color: MyColors.pureblack,
+                    color: AppColors.pureblack,
                     fontFamily: 'Roboto',
                   ),
                 ),

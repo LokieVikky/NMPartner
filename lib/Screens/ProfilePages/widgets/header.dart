@@ -47,7 +47,7 @@ class Header extends StatelessWidget {
                         Radius.circular(5.0),
                       ),
                       border: Border.all(
-                        color: MyColors.purple,
+                        color: AppColors.purple,
                       ),
                       color: bgColor,
                     ),

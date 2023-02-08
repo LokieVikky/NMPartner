@@ -28,7 +28,7 @@ class VehicleInfoHome extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: 2,
-                    color: MyColors.purple1,
+                    color: AppColors.purple1,
                   ),
                   borderRadius: BorderRadius.circular(100),
                 ),
@@ -36,7 +36,7 @@ class VehicleInfoHome extends StatelessWidget {
                   child: Icon(
                     Icons.check,
                     size: 20,
-                    color: MyColors.purple1,
+                    color: AppColors.purple1,
                   ),
                 ),
               ),

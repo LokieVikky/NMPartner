@@ -21,7 +21,7 @@ class OrderListNotifier extends StateNotifier<OrderListState> {
 
   getOrderList() async {
     state = _loadingState();
-    List<OrderListEntity> result = await ApiService().getOrderList();
+    List<WorkOrder> result = await ApiService().getOrderList();
 
     if (result != null) {
       state = _dataState(result);
@@ -38,7 +38,7 @@ class OrderListNotifier extends StateNotifier<OrderListState> {
     return OrderListState(true, state.entity, state.error, false);
   }
 
-  OrderListState _dataState(List<OrderListEntity> data) {
+  OrderListState _dataState(List<WorkOrder> data) {
     return OrderListState(false, AsyncData(data), state.error, false);
   }
 }
@@ -74,7 +74,7 @@ class GetActionRequiredOrdersNotifier extends StateNotifier<OrderListState> {
     return OrderListState(true, state.entity, state.error, false);
   }
 
-  OrderListState _dataState(List<OrderListEntity> data) {
+  OrderListState _dataState(List<WorkOrder> data) {
     return OrderListState(false, AsyncData(data), state.error, false);
   }
 }

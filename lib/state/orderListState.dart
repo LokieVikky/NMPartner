@@ -4,7 +4,7 @@ import '../entity/orderListEntity.dart';
 
 class OrderListState {
   bool? isLoading;
-  AsyncValue<List<OrderListEntity>>? entity;
+  AsyncValue<List<WorkOrder>>? entity;
   String? error;
   bool? initState;
 

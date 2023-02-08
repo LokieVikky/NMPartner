@@ -7,14 +7,14 @@ class CustomerOrders extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColors.purewhite,
+        backgroundColor: AppColors.purewhite,
         elevation: 0,
         title: Text(
           "Home",
           style: TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.w400,
-            color: MyColors.pureblack,
+            color: AppColors.pureblack,
             fontFamily: 'Poppins',
           ),
         ),
@@ -34,7 +34,7 @@ class CustomerOrders extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 30.0,
                   fontWeight: FontWeight.w600,
-                  color: MyColors.purple,
+                  color: AppColors.purple,
                   fontFamily: 'Roboto',
                 ),
               ),

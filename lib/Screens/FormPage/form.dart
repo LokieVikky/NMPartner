@@ -24,7 +24,7 @@ class _FormPageState extends ConsumerState<FormPage> {
     final state = ref.watch(registrationStatusProvider);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColors.purewhite,
+        backgroundColor: AppColors.purewhite,
         elevation: 1,
         centerTitle: true,
         title: Text(
@@ -55,7 +55,7 @@ class _FormPageState extends ConsumerState<FormPage> {
         },
         loading: () {
           return Center(
-            child: CircularProgressIndicator(color: MyColors.yellow, strokeWidth: 6),
+            child: CircularProgressIndicator(color: AppColors.yellow, strokeWidth: 6),
           );
         },
       ),

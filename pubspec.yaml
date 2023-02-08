@@ -41,11 +41,11 @@ dependencies:
   lottie: ^2.1.0
   cached_network_image: ^3.2.0
   flutter_riverpod: ^2.1.1
-  graphql_flutter: ^5.0.1
+  graphql_flutter: ^5.1.2
   http: ^0.13.4
   jwt_decoder: ^2.0.1
   cupertino_icons: ^1.0.2
-  aws_s3_plugin_flutter: ^0.0.5
+#  aws_s3_plugin_flutter: ^0.0.5
   amazon_cognito_identity_dart_2: ^3.1.1
   flutter_secure_storage: ^7.0.1
   flutter_rating_bar: ^4.0.0
@@ -58,6 +58,7 @@ dependencies:
   keyboard_actions: ^4.1.0
   google_fonts: ^3.0.1
   pin_code_fields: ^7.4.0
+  open_street_map_search_and_pick: ^0.0.15
 
 dev_dependencies:
   flutter_test:

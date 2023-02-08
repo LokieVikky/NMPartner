@@ -34,6 +34,7 @@ class AppGraphQLClient {
           return 'Bearer $token';
         }
         token = await user!.getIdToken(true);
+        currentToken = token;
         return 'Bearer $token';
       },
     );

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:partner/Screens/FormPage/category_selection_page.dart';
 import 'package:partner/Screens/FormPage/widgets/shopCategory.dart';
 import 'package:partner/Screens/FormPage/widgets/shopServices.dart';
 import 'package:partner/models/mModel/modelCategory.dart';
@@ -38,8 +39,7 @@ class _ShopServicesState extends ConsumerState<ShopType> {
           ShopServices(),
           StreamBuilder(
             builder: (context, snapshot) {
-              ShopCategoryState state =
-                  ref.watch(shopCategoryNotifierProvider)!;
+              ShopCategoryState state = ref.watch(shopCategoryNotifierProvider)!;
               switch (state.status) {
                 case UpdateShopCategoryStatus.initial:
                 case UpdateShopCategoryStatus.failure:
@@ -56,8 +56,7 @@ class _ShopServicesState extends ConsumerState<ShopType> {
                       for (ItemCategory category in categoryList) {
                         if (category.isSelected) {
                           selectedCategory.add(category.id);
-                          for (ItemSubCategories subCategory
-                              in category.itemSubCategories) {
+                          for (ItemSubCategories subCategory in category.itemSubCategories) {
                             if (subCategory.isSelected) {
                               selectedSubCategory.add(subCategory.id);
                               for (ItemSubCategoryBrands brand
@@ -70,16 +69,14 @@ class _ShopServicesState extends ConsumerState<ShopType> {
                           }
                         }
                       }
-                      var selectedServices = await ref
-                          .read(selectedServiceNotifierProvider.notifier)
-                          .state;
+                      var selectedServices =
+                          await ref.read(selectedServiceNotifierProvider.notifier).state;
 
-                      if (selectedBrand.isNotEmpty &&
-                          selectedServices.isNotEmpty) {
+                      if (selectedBrand.isNotEmpty && selectedServices.isNotEmpty) {
                         var res = await ref
                             .read(shopCategoryNotifierProvider.notifier)
-                            .insertShoptype(null, selectedSubCategory,
-                                selectedBrand, selectedServices);
+                            .insertShoptype(
+                                null, selectedSubCategory, selectedBrand, selectedServices);
                         print(categoryList);
 
                         if (res != null) {
@@ -93,7 +90,7 @@ class _ShopServicesState extends ConsumerState<ShopType> {
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 1,
-                            backgroundColor: MyColors.yellow,
+                            backgroundColor: AppColors.yellow,
                             textColor: Colors.black,
                             fontSize: 20.0);
                       }
@@ -110,7 +107,7 @@ class _ShopServicesState extends ConsumerState<ShopType> {
                         borderRadius: BorderRadius.all(
                           Radius.circular(5.0),
                         ),
-                        color: MyColors.yellow,
+                        color: AppColors.yellow,
                       ),
                       child: Text(
                         "SAVE",
@@ -131,12 +128,11 @@ class _ShopServicesState extends ConsumerState<ShopType> {
                       borderRadius: BorderRadius.all(
                         Radius.circular(5.0),
                       ),
-                      color: MyColors.yellow,
+                      color: AppColors.yellow,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: CircularProgressIndicator(
-                          color: MyColors.pureblack, strokeWidth: 2),
+                      child: CircularProgressIndicator(color: AppColors.pureblack, strokeWidth: 2),
                     ),
                   );
               }

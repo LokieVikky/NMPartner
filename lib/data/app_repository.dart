@@ -2,12 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:partner/data/gql_queries.dart';
+import 'package:partner/entity/orderListEntity.dart';
 import 'package:partner/entity/partnerInfoEntity.dart';
+import 'package:partner/entity/pendingOrderInfo.dart';
 import 'package:partner/entity/shopInfoEntity.dart';
+import 'package:partner/models/mModel/modelCategory.dart';
 import 'package:partner/models/mModel/modelItemCategory.dart';
 import 'package:partner/models/mModel/modelItemSubCategory.dart';
+import 'package:partner/models/mModel/modelService.dart';
 import 'package:partner/providers.dart';
+import 'package:partner/services/gqlQueries.dart';
 import 'package:partner/shared/graphql_client.dart';
+
+import '../entity/ProfileEntity.dart';
 
 final appRepositoryProvider = Provider<AppRepository>((ref) {
   return AppRepository(ref);
@@ -104,6 +111,44 @@ class AppRepository {
     }
   }
 
+  Future<bool> updateShop(ShopEntity shopEntity) async {
+    try {
+      Map<String, dynamic> variables = {
+        "avatar": shopEntity.avatarUrl,
+        "desc": shopEntity.shopDescription,
+        "name": shopEntity.shopName,
+        "partnerID": shopEntity.partnerId
+      };
+
+      final QueryResult result =
+          await _appGraphQLClient.mutate(query: GQLQueries.insertShopInfo, variables: variables);
+      if (result.hasException) {
+        throw Exception(result.exception.toString());
+      }
+      if (result.data != null) {
+        final shopId = await result.data!['insert_namma_mechanics_shop']['returning'][0]['id'];
+        Map<String, dynamic> variables = {
+          'street': shopEntity.street,
+          'houseNo': shopEntity.shopNo,
+          'city': shopEntity.city,
+          'latLng': shopEntity.latlng,
+          'pinCode': shopEntity.pincode,
+          'landMark': shopEntity.landmark,
+          'shopId': shopId,
+        };
+        final QueryResult result2 = await _appGraphQLClient.mutate(
+            query: GQLQueries.insertShopAddress, variables: variables);
+        if (result2.hasException) {
+          throw Exception(result2.exception.toString());
+        }
+        return true;
+      }
+      return false;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<int?> getCurrentStep(String? partnerId) async {
     try {
       final result = await _appGraphQLClient
@@ -166,13 +211,13 @@ class AppRepository {
         throw Exception('Failed to create shop');
       }
 
-      return insertShopAddress(shop, shopID);
+      return insertShopAddress(shop: shop, shopId: shopID);
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<bool> insertShopAddress(ShopEntity shop, shopId) async {
+  Future<bool> insertShopAddress({required ShopEntity shop, required shopId}) async {
     QueryResult result =
         await _appGraphQLClient.mutate(query: GQLQueries.insertShopAddress, variables: {
       'street': shop.street,
@@ -192,158 +237,126 @@ class AppRepository {
     return false;
   }
 
-  Future<List<CategoryModel>> getCategoryList() async {
+  Future<List<NMCategory>> getCategoryList() async {
     try {
-      final data = await _appGraphQLClient.query(query: GQLQueries.queryGetCategory);
-      List<dynamic> categoryModel = [];
-      categoryModel = data.data?['namma_mechanics_item_category'];
-      List<CategoryModel> categoryModelList = [];
-      categoryModelList =
-          categoryModel.map((e) => CategoryModel.fromJson(e)).toList();
-      return categoryModelList;
+      QueryResult result = await _appGraphQLClient.query(query: GQLQueries.queryGetCategory);
+      if (result.hasException) {
+        throw Exception(result.exception.toString());
+      }
+      if (result.data == null) {
+        throw Exception('Unable to load categories');
+      }
+      return (result.data?['namma_mechanics_item_category'] as List)
+          .map((e) => NMCategory.fromJson(e))
+          .toList();
     } catch (e) {
       rethrow;
     }
   }
 
-/*  Future<List<ModelItemSubCategory>> getSubCategory(List<String> categoryId) async {
-
-    final QueryResult result = await _appGraphQLClient.query(query: GQLQueries.queryGetSubcategory,variables: {'list': categoryId});
-
-    QueryOptions options =
-        QueryOptions(document: gql(queryGetSubcategory), variables: {'list': categoryId});
-    dynamic result = await _getQueryResult(queryGetSubcategory, queryOptions: options);
-
-    List<ModelItemSubCategory> mModel = [];
-
-    for (dynamic element in result.data['namma_mechanics_item_sub_category']) {
-      mModel.add(ModelItemSubCategory(
-          subCategoryId: element['id'],
-          subCategoryName: element['name'],
-          subCategoryIsSelected: false));
+  Future<List<SubCategory>> getSubCategory({required String categoryId}) async {
+    QueryResult result = await _appGraphQLClient
+        .query(query: GQLQueries.queryGetSubcategory, variables: {'_eq': categoryId});
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
     }
-    print("subCat -> " + mModel.toString());
-    return mModel;
+    if (result.data == null) {
+      throw Exception('Unable to load sub categories');
+    }
+    return (result.data?['namma_mechanics_item_sub_category'] as List)
+        .map((e) => SubCategory.fromJson(e))
+        .toList();
   }
 
-  getBrands(List<String> subCategoryId) async {
-    QueryOptions options =
-        QueryOptions(document: gql(queryBrands), variables: {'list': subCategoryId});
-    dynamic result = await _getQueryResult(queryBrands, queryOptions: options);
-    List<String> brandIds = [];
-    for (dynamic element in result.data['namma_mechanics_item_sub_category_brand']) {
-      brandIds.add(element['brand_id']);
+  Future<List<Brand>> getBrands({required String subCategoryId}) async {
+    print(subCategoryId);
+    QueryResult result = await _appGraphQLClient
+        .query(query: GQLQueries.queryBrands, variables: {'_eq': subCategoryId});
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
     }
-
-    QueryOptions brandOptions =
-        QueryOptions(document: gql(quertBrandList), variables: {'list': brandIds});
-    dynamic brandResult = await _getQueryResult(quertBrandList, queryOptions: brandOptions);
-
-    List<ModelItemBrand> brands = [];
-    for (dynamic element in brandResult.data['namma_mechanics_brand']) {
-      brands.add(ModelItemBrand(
-          brandId: element['id'], brandName: element['name'], brandIsSelected: false));
+    if (result.data == null) {
+      throw Exception('Unable to load brands');
     }
-    return brands;
+    return (result.data?['namma_mechanics_item_sub_category_brand'] as List)
+        .map((e) => Brand.fromJson(e))
+        .toList();
   }
 
-  getAllCategory() async {
-    try {
-      var result = await _getQueryResult(queryGetAllCategory);
-      List<dynamic> data = result.data['namma_mechanics_item_category'];
-      List<ItemCategory> categories = [];
-      data.forEach((element) {
-        categories.add(ItemCategory.fromJson(element));
-      });
-      return categories;
-    } catch (e) {
-      print(e);
+  Future<List<NMService>> getServices() async {
+    QueryResult result = await _appGraphQLClient.query(query: GQLQueries.queryServiceList);
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
     }
+    if (result.data == null) {
+      throw Exception('Unable to load services');
+    }
+    return (result.data?['namma_mechanics_service'] as List)
+        .map((e) => NMService.fromJson(e))
+        .toList();
   }
 
-  getServiceList() async {
-    var result = await _getQueryResult(queryServiceList);
-    Map<String, ModelService> finalList = {};
-    for (dynamic element in result.data['namma_mechanics_service']) {
-      finalList[element['id']] = ModelService(
-          element['name'], element['rate'], element['rate_configurable'], element['id'], false);
+  Future<List<WorkOrder>> getOrders({required String shopId}) async {
+    QueryResult result = await _appGraphQLClient
+        .query(query: GQLQueries.queryOrderList, variables: {'shopId': shopId});
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
     }
-    return finalList;
+    if (result.data == null) {
+      throw Exception('Unable to load orders');
+    }
+    return (result.data?['namma_mechanics_order'] as List)
+        .map((e) => WorkOrder.fromJson(e))
+        .toList();
   }
 
-  getOrderList() async {
-    String? shopID = await readShopId();
-    QueryOptions options =
-        QueryOptions(document: gql(getPlacedOrdersList), variables: {'shopId': shopID});
-    // await readShopId()
-    var result = await _getQueryResult(getPlacedOrdersList, queryOptions: options);
-    List<OrderListEntity> entities = [];
-
-    for (dynamic element in result.data['namma_mechanics_order']) {
-      entities.add(OrderListEntity(
-          description: element['description'],
-          orderId: element['id'],
-          amount: element['amount'],
-          placedOn: element['placed_on'],
-          customerId: element['consumer_id']));
+  Future<PendingOrderInfo> getPendingOrderInfo(
+      {required String customerId, required String orderId}) async {
+    QueryResult result = await _appGraphQLClient.query(
+        query: GQLQueries.queryCustomerInfo, variables: {'custId': customerId, 'orderId': orderId});
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
     }
-    print(result.toString());
-    return entities;
+    if (result.data == null) {
+      throw Exception('Unable to pending orders');
+    }
+
+    final customerData = result.data?['namma_mechanics_consumer'][0];
+    final orderData = result.data?['namma_mechanics_consumer'][0]['orders'];
+    List<ModelService> orderService = [];
+
+    return PendingOrderInfo(
+        custName: customerData['name'],
+        customerId: customerData['id'],
+        custProfile: customerData['avatar'],
+        orderDescription: orderData[0]['description'],
+        serviceModel: orderService);
   }
 
-  getPendingOrderInfo(String custId, String orderId) async {
-    QueryOptions options = QueryOptions(
-        document: gql(queryCustomerInfo), variables: {'custId': custId, 'orderId': orderId});
-
-    final result = await _getQueryResult(queryCustomerInfo, queryOptions: options);
-
-    if (result != null) {
-      final cust_data = result.data['namma_mechanics_consumer'][0];
-      final orderData = result.data['namma_mechanics_consumer'][0]['orders'];
-      List<ModelService> orderService = [];
-
-      for (var element in orderData[0]['order_services']) {
-        orderService.add(ModelService(element['shop_service']['name'],
-            element['shop_service']['amount'], false, null, false));
-      }
-
-      PendingOrderInfo entity = await PendingOrderInfo(
-          custName: cust_data['name'],
-          customerId: cust_data['id'],
-          custProfile: cust_data['avatar'],
-          orderDescription: orderData[0]['description'],
-          serviceModel: orderService);
-      print(result.toString());
-
-      return entity;
+  Future<List<WorkOrder>> getActionRequiredOrders({required String shopId}) async {
+    QueryResult result = await _appGraphQLClient
+        .query(query: GQLQueries.queryGetActionRequired, variables: {'shopId': shopId});
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
     }
+    if (result.data == null) {
+      throw Exception('Unable to load orders');
+    }
+    return (result.data?['namma_mechanics_order'] as List)
+        .map((e) => WorkOrder.fromJson(e))
+        .toList();
   }
 
-  getActionRequiredOrders() async {
-    QueryOptions options = QueryOptions(
-        document: gql(queryGetActionRequired),
-        variables: {'shopId': "7bdfde1a-0483-45ce-aa74-4459c60b611d"});
-    final result = await _getQueryResult(queryGetActionRequired, queryOptions: options);
-
-    List<OrderListEntity> mList = [];
-    for (dynamic element in result.data['namma_mechanics_order']) {
-      mList.add(OrderListEntity(
-          customerId: element['consumer_id'],
-          placedOn: element['placed_on'],
-          amount: element['amount'],
-          description: element['description'],
-          orderId: element['id'],
-          orderStatus: element['order_status_details'][0]['status']));
+  Future<ProfileEntity> getProfileInfo() async {
+    QueryResult result = await _appGraphQLClient.query(
+        query: GQLQueries.queryGetProfileInfo,
+        variables: {'partnerId': _firebaseAuth.currentUser?.uid});
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
     }
-    print(result);
-    return mList;
-  }
-
-  getProfileInfo() async {
-    QueryOptions options = QueryOptions(
-        document: gql(queryGetProfileInfo), variables: {'partnerId': await readPartnerId()});
-
-    QueryResult result = await _getQueryResult(queryGetProfileInfo, queryOptions: options);
+    if (result.data == null) {
+      throw Exception('Unable to profile');
+    }
 
     final partner = await result.data!['namma_mechanics_partner'][0];
     final shop = await partner['shops'][0];
@@ -359,7 +372,7 @@ class AppRepository {
           reviewDate: "",
           reviewRating: review["rating"]));
     }
-    PartnerInfoEntity partnerInfoEntity = await PartnerInfoEntity(
+    PartnerInfoEntity partnerInfoEntity = PartnerInfoEntity(
         partnerName: partner['name'],
         partnerAddressId: partner['id'],
         partnerProfilePic: partner['avatar'],
@@ -369,7 +382,7 @@ class AppRepository {
         partnerCity: partnerAddress['city'],
         partnerPincode: partnerAddress['pincode']);
 
-    ShopEntity shopEntity = await ShopEntity(
+    ShopEntity shopEntity = ShopEntity(
         shopName: shop['name'],
         shopDescription: shop['description'],
         shopNo: shop['addresses'][0]['house_no'],
@@ -378,9 +391,9 @@ class AppRepository {
         landmark: shop['addresses'][0]['landmark'],
         pincode: shop['addresses'][0]['pincode']);
 
-    List<ModelService> serviceList = [];
+    List<NMService> serviceList = [];
     for (var element in services) {
-      serviceList.add(ModelService(element['name'], element['amount'], false, null, false));
+      serviceList.add(NMService.fromJson(element));
     }
 
     ProfileEntity profileEntity = ProfileEntity(
@@ -389,91 +402,86 @@ class AppRepository {
         shopEntity: shopEntity,
         shopService: serviceList);
 
-    print(result);
     return profileEntity;
   }
 
-  changeOrderStatus(String orderId, String status) async {
-    MutationOptions options = MutationOptions(
-        document: gql(queryChangeOrderStatus), variables: {'status': status, 'orderId': orderId});
-
-    var result = await _getMutationResult(queryChangeOrderStatus, mutationOptions: options);
-
-    return result.data['update_namma_mechanics_order_status_details']['returning'][0];
+  Future<bool> changeOrderStatus(String orderId, String status) async {
+    QueryResult result = await _appGraphQLClient.mutate(
+        query: GQLQueries.queryChangeOrderStatus,
+        variables: {'status': status, 'orderId': orderId});
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
+    }
+    if (result.data != null) {
+      return true;
+    }
+    return false;
   }
 
   Future<List<String>> getStatusList() async {
-    var result = await _getQueryResult(queryStatusList);
-    List<String> statusList = [];
-    for (var status in result.data['namma_mechanics_order_status']) {
-      if (status['order_status'] != 'PLACED' &&
-          status['order_status'] != 'REJECTED' &&
-          status['order_status'] != 'ACCEPTED' &&
-          status['order_status'] != 'CANCELED') {
-        statusList.add(status['order_status']);
-      }
+    QueryResult result = await _appGraphQLClient.mutate(query: GQLQueries.queryStatusList);
+
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
     }
-    return statusList;
-  }
-
-  insertSubCategory(var map) async {
-    MutationOptions options =
-        MutationOptions(document: gql(queryInsertSubCategory), variables: {'subCatList': map});
-
-    var result = await _getMutationResult(queryInsertSubCategory, mutationOptions: options);
-    return result;
-  }
-
-  insertBrand(List<Map<String, String>> map) async {
-    MutationOptions options =
-        MutationOptions(document: gql(queryInsertBrand), variables: {'brandList': map});
-
-    var result = await _getMutationResult(queryInsertBrand, mutationOptions: options);
-    print(result);
-    return result;
-  }
-
-  updateProfile(ProfileEntity entity) async {
-    MutationOptions options = MutationOptions(document: gql(queryUpdateProfile), variables: {
-      "partnerId": await readPartnerId(),
-      "partnerName": entity.partnerInfoEntity!.partnerName,
-      "partnerStreet": entity.partnerInfoEntity!.partnerStreet,
-      "partnerCity": entity.partnerInfoEntity!.partnerCity,
-      "partnerHouseNo": entity.partnerInfoEntity!.partnerFlatNo,
-      "partnerLandmark": entity.partnerInfoEntity!.partnerLandmark,
-      "partnerLatlng": "0.0",
-      "partnerPincode": entity.partnerInfoEntity!.partnerPincode,
-      "shopId": await readShopId(),
-      "shopName": entity.shopEntity!.shopName,
-      "shopDescription": entity.shopEntity!.shopDescription,
-      "shopStreet": entity.shopEntity!.street,
-      "shopCity": entity.shopEntity!.city,
-      "shopHouseNo": entity.shopEntity!.shopNo,
-      "shopLandmark": entity.shopEntity!.landmark,
-      "shopLatlng": "0.0",
-      "shopPincode": entity.shopEntity!.pincode
-    });
-    var result = _getMutationResult(queryUpdateProfile, mutationOptions: options);
-
-    return result;
-  }
-
-  insertService(List<ModelService> serviceList) async {
-    List<Map<dynamic, dynamic>> mMap = [];
-
-    for (var data in serviceList) {
-      mMap.add(await data.toJson());
+    if (result.data == null) {
+      throw Exception('Unable to status');
     }
+    return (result.data?['namma_mechanics_order_status'] as List).map((e) => e.toString()).toList();
+  }
 
-    MutationOptions options =
-        MutationOptions(document: gql(queryInsertService), variables: {'list': mMap});
-
-    var result = await _getMutationResult(queryInsertService, mutationOptions: options);
-
-    if (result != null) {
-      return result.data['insert_namma_mechanics_shop_service']['id'];
+//
+  Future<bool> insertBrand(List<Map<String, String>> map) async {
+    QueryResult result = await _appGraphQLClient
+        .mutate(query: GQLQueries.queryInsertBrand, variables: {'brandList': map});
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
     }
-    print(result);
-  }*/
+    if (result.data != null) {
+      return true;
+    }
+    return false;
+  }
 
+//
+// updateProfile(ProfileEntity entity) async {
+//
+//     queryUpdateProfile
+//   MutationOptions options = MutationOptions(document: gql(queryUpdateProfile), variables: {
+//     "partnerId": await readPartnerId(),
+//     "partnerName": entity.partnerInfoEntity!.partnerName,
+//     "partnerStreet": entity.partnerInfoEntity!.partnerStreet,
+//     "partnerCity": entity.partnerInfoEntity!.partnerCity,
+//     "partnerHouseNo": entity.partnerInfoEntity!.partnerFlatNo,
+//     "partnerLandmark": entity.partnerInfoEntity!.partnerLandmark,
+//     "partnerLatlng": "0.0",
+//     "partnerPincode": entity.partnerInfoEntity!.partnerPincode,
+//     "shopId": await readShopId(),
+//     "shopName": entity.shopEntity!.shopName,
+//     "shopDescription": entity.shopEntity!.shopDescription,
+//     "shopStreet": entity.shopEntity!.street,
+//     "shopCity": entity.shopEntity!.city,
+//     "shopHouseNo": entity.shopEntity!.shopNo,
+//     "shopLandmark": entity.shopEntity!.landmark,
+//     "shopLatlng": "0.0",
+//     "shopPincode": entity.shopEntity!.pincode
+//   });
+//   var result = _getMutationResult(queryUpdateProfile, mutationOptions: options);
+//
+//   return result;
+// }
+//
+
+  Future<bool> insertService(List<ShopService> serviceList) async {
+    QueryResult result = await _appGraphQLClient.mutate(
+        query: GQLQueries.queryInsertService,
+        variables: {'list': serviceList.map((e) => e.toJson)});
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
+    }
+    if (result.data != null) {
+      return true;
+    }
+    return false;
+  }
 }

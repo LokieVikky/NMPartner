@@ -17,11 +17,11 @@ class EditServices extends StatelessWidget {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: MyColors.pureblack,
+            color: AppColors.pureblack,
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: MyColors.purewhite,
+        backgroundColor: AppColors.purewhite,
         elevation: 5,
       ),
       body: Column(
@@ -81,9 +81,9 @@ class EditServices extends StatelessWidget {
                       Radius.circular(20.0),
                     ),
                     border: Border.all(
-                      color: MyColors.yellow,
+                      color: AppColors.yellow,
                     ),
-                    color: MyColors.purewhite,
+                    color: AppColors.purewhite,
                   ),
                   child: Container(
                     margin: EdgeInsets.only(
@@ -163,16 +163,16 @@ class EditServices extends StatelessWidget {
                         Radius.circular(5.0),
                       ),
                       border: Border.all(
-                        color: MyColors.purple,
+                        color: AppColors.purple,
                       ),
-                      color: MyColors.purple,
+                      color: AppColors.purple,
                     ),
                     child: Center(
                       child: Text("Add new service",
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.w400,
-                            color: MyColors.purewhite,
+                            color: AppColors.purewhite,
                             fontFamily: 'Poppins',
                           )),
                     ),
