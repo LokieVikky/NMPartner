@@ -53,12 +53,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    () async {
-      String? shopID = await ApiService().readShopId();
-      print(shopID);
-    }();
-
+Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
         currentState = ref.watch(bottomNavigationState);

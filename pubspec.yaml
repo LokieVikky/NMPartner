@@ -59,6 +59,7 @@ dependencies:
   google_fonts: ^3.0.1
   pin_code_fields: ^7.4.0
   open_street_map_search_and_pick: ^0.0.15
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:

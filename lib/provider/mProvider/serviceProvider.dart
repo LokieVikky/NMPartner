@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:partner/models/mModel/modelService.dart';
+import 'package:partner/models/mModel/nm_service.dart';
 import 'package:partner/services/apiService.dart';
 
 // availableService

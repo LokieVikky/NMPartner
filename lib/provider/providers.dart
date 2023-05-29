@@ -1,11 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:partner/data/app_repository.dart';
-import 'package:partner/models/mModel/modelCategory.dart';
-import 'package:partner/models/mModel/modelItemCategory.dart';
-import 'package:partner/models/mModel/modelItemSubCategory.dart';
-import 'package:partner/models/mModel/modelService.dart';
-import 'package:tuple/tuple.dart';
+import 'package:partner/entity/partnerInfoEntity.dart';
+import 'package:partner/models/mModel/nm_category.dart';
+import 'package:partner/models/mModel/nm_sub_category.dart';
+import 'package:partner/models/mModel/nm_service.dart';
 
 final registrationStatusProvider = FutureProvider<int?>((ref) async {
   return await ref
@@ -13,44 +13,52 @@ final registrationStatusProvider = FutureProvider<int?>((ref) async {
       .getCurrentStep(FirebaseAuth.instance.currentUser?.uid);
 });
 
-final serviceListProvider = FutureProvider<List<NMService>>((ref) async {
-  return await ref.read(appRepositoryProvider).getServices();
+final shopIdProvider = FutureProvider<String?>((ref) async {
+  return await ref.read(appRepositoryProvider).getShopId(FirebaseAuth.instance.currentUser?.uid);
 });
 
-final categoryListProvider = FutureProvider<List<NMCategory>>((ref) async {
+final categoriesProvider = FutureProvider<List<NMCategory>>((ref) async {
   return await ref.read(appRepositoryProvider).getCategoryList();
 });
 
-final multiSubCategoryListProvider =
-    FutureProvider.family<List<SubCategory>, String>((ref, args) async {
-  List<String> categoryIds = args.split('#');
-  if (categoryIds.isEmpty) {
-    return [];
+final subCategoriesProvider =
+    FutureProvider.family<List<NMSubCategory>, SubCategoryProviderParam>((ref, args) async {
+  return await ref.read(appRepositoryProvider).getSubCategories(categoryIds: args.toIds());
+});
+
+final servicesProvider =
+    FutureProvider.family<List<NMService>, ServicesProviderParam>((ref, args) async {
+  return await ref.read(appRepositoryProvider).getServices(subCategoryIds: args.toIds());
+});
+
+final partnerInfoProvider = FutureProvider.family<PartnerInfoEntity, String>((ref, args) async {
+  return await ref.read(appRepositoryProvider).getPartnerInfo(partnerId: args);
+});
+
+class SubCategoryProviderParam extends Equatable {
+  final List<NMCategory> categories;
+
+  const SubCategoryProviderParam(this.categories);
+
+  @override
+  List<Object?> get props => [categories];
+
+  List<String> toIds() {
+    categories.removeWhere((element) => element.categoryID == null);
+    return categories.map((e) => e.categoryID!).toList();
   }
-  List<SubCategory> subCategories = [];
-  categoryIds.forEach((element) async {
-    subCategories.addAll(await ref.read(subCategoryListProvider(element).future));
-  });
-  return subCategories;
-});
+}
 
-final subCategoryListProvider = FutureProvider.family<List<SubCategory>, String>((ref, args) async {
-  return await ref.read(appRepositoryProvider).getSubCategory(categoryId: args);
-});
+class ServicesProviderParam extends Equatable {
+  final List<NMSubCategory> subCategories;
 
-final multiBrandListProvider = FutureProvider.family<List<Brand>, String>((ref, args) async {
-  List<String> subCategoryIds = args.split('#');
-  if (subCategoryIds.isEmpty) {
-    return [];
+  const ServicesProviderParam(this.subCategories);
+
+  @override
+  List<Object?> get props => [subCategories];
+
+  List<String> toIds() {
+    subCategories.removeWhere((element) => element.subCategoryId == null);
+    return subCategories.map((e) => e.subCategoryId!).toList();
   }
-  List<Brand> brands = [];
-  subCategoryIds.forEach((element) async {
-    brands.addAll(await ref.read(brandListProvider(element).future));
-  });
-  return brands;
-});
-
-final brandListProvider = FutureProvider.family<List<Brand>, String>((ref, args) async {
-  return await ref.read(appRepositoryProvider).getBrands(subCategoryId: args);
-});
-
+}

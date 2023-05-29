@@ -7,11 +7,10 @@ import 'package:partner/entity/partnerInfoEntity.dart';
 import 'package:partner/entity/pendingOrderInfo.dart';
 import 'package:partner/entity/shopInfoEntity.dart';
 import 'package:partner/models/mModel/modelCategory.dart';
-import 'package:partner/models/mModel/modelItemCategory.dart';
-import 'package:partner/models/mModel/modelItemSubCategory.dart';
-import 'package:partner/models/mModel/modelService.dart';
+import 'package:partner/models/mModel/nm_category.dart';
+import 'package:partner/models/mModel/nm_sub_category.dart';
+import 'package:partner/models/mModel/nm_service.dart';
 import 'package:partner/providers.dart';
-import 'package:partner/services/gqlQueries.dart';
 import 'package:partner/shared/graphql_client.dart';
 
 import '../entity/ProfileEntity.dart';
@@ -76,6 +75,22 @@ class AppRepository {
     }
   }
 
+  Future<PartnerInfoEntity> getPartnerInfo({required String partnerId}) async {
+    try {
+      QueryResult result = await _appGraphQLClient.query(query: GQLQueries.queryGetCategory);
+      if (result.hasException) {
+        throw Exception(result.exception.toString());
+      }
+      if (result.data == null) {
+        throw Exception('Unable to load categories');
+      }
+      return (result.data?['namma_mechanics_item_category']?[0])
+          .map((e) => PartnerInfoEntity.fromJson(e));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<bool> updatePartner(PartnerInfoEntity partnerInfoModel) async {
     try {
       Map<String, dynamic> variables = {
@@ -111,7 +126,7 @@ class AppRepository {
     }
   }
 
-  Future<bool> updateShop(ShopEntity shopEntity) async {
+  Future<String> updateShop(ShopEntity shopEntity) async {
     try {
       Map<String, dynamic> variables = {
         "avatar": shopEntity.avatarUrl,
@@ -141,9 +156,30 @@ class AppRepository {
         if (result2.hasException) {
           throw Exception(result2.exception.toString());
         }
-        return true;
+        return shopId;
       }
-      return false;
+      throw Exception('Something went wrong');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String?> getShopId(String? partnerId) async {
+    try {
+      final result = await _appGraphQLClient
+          .query(query: GQLQueries.query_getCurrentStep, variables: {'partnerId': partnerId});
+      if (result.hasException) {
+        throw Exception(result.exception.toString());
+      }
+      if (result.data == null) {
+        throw Exception('Partner not found');
+      }
+      var content = result.data!['namma_mechanics_partner'][0];
+      List shop = content['shops'];
+      if (shop.isNotEmpty) {
+        return shop[0]['id'];
+      }
+      throw Exception('Unable to find the respective shop');
     } catch (e) {
       rethrow;
     }
@@ -254,7 +290,7 @@ class AppRepository {
     }
   }
 
-  Future<List<SubCategory>> getSubCategory({required String categoryId}) async {
+  Future<List<NMSubCategory>> getSubCategory({required String categoryId}) async {
     QueryResult result = await _appGraphQLClient
         .query(query: GQLQueries.queryGetSubcategory, variables: {'_eq': categoryId});
     if (result.hasException) {
@@ -264,7 +300,21 @@ class AppRepository {
       throw Exception('Unable to load sub categories');
     }
     return (result.data?['namma_mechanics_item_sub_category'] as List)
-        .map((e) => SubCategory.fromJson(e))
+        .map((e) => NMSubCategory.fromJson(e))
+        .toList();
+  }
+
+  Future<List<NMSubCategory>> getSubCategories({required List<String> categoryIds}) async {
+    QueryResult result = await _appGraphQLClient
+        .query(query: GQLQueries.querySubCategories, variables: {'_in': categoryIds});
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
+    }
+    if (result.data == null) {
+      throw Exception('Unable to load sub categories');
+    }
+    return (result.data?['namma_mechanics_item_sub_category'] as List)
+        .map((e) => NMSubCategory.fromJson(e))
         .toList();
   }
 
@@ -283,8 +333,16 @@ class AppRepository {
         .toList();
   }
 
-  Future<List<NMService>> getServices() async {
-    QueryResult result = await _appGraphQLClient.query(query: GQLQueries.queryServiceList);
+  Future<List<NMService>> getServices({List<String>? subCategoryIds}) async {
+    QueryResult result;
+    if (subCategoryIds == null) {
+      result = await _appGraphQLClient.query(
+        query: GQLQueries.queryServiceList,
+      );
+    } else {
+      result = await _appGraphQLClient.query(
+          query: GQLQueries.queryServiceListForSubCategory, variables: {'_in': subCategoryIds});
+    }
     if (result.hasException) {
       throw Exception(result.exception.toString());
     }
@@ -472,10 +530,22 @@ class AppRepository {
 // }
 //
 
-  Future<bool> insertService(List<ShopService> serviceList) async {
-    QueryResult result = await _appGraphQLClient.mutate(
-        query: GQLQueries.queryInsertService,
-        variables: {'list': serviceList.map((e) => e.toJson)});
+  Future<bool> insertService(String shopId, List<NMService> serviceList) async {
+    QueryResult result =
+        await _appGraphQLClient.mutate(query: GQLQueries.queryInsertService, variables: {
+      'list': serviceList.map((e) {
+        return {
+          'service_id': e.id,
+          'shop_id': shopId,
+          'rate': e.rate,
+          'tax': null,
+          'amount': null,
+          'name': e.name,
+          'description': null,
+          'sub_category_id': e.subCategoryId,
+        };
+      }).toList()
+    });
     if (result.hasException) {
       throw Exception(result.exception.toString());
     }

@@ -1,7 +1,7 @@
 import 'package:partner/entity/partnerInfoEntity.dart';
 import 'package:partner/entity/shopInfoEntity.dart';
 
-import '../models/mModel/modelService.dart';
+import '../models/mModel/nm_service.dart';
 
 class ProfileEntity {
   List<ReviewEntity>? reviews;

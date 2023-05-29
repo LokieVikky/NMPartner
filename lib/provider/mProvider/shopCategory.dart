@@ -1,6 +1,6 @@
 import 'package:partner/Screens/FormPage/form.dart';
-import 'package:partner/Screens/FormPage/widgets/shopCategory.dart';
-import 'package:partner/models/mModel/modelService.dart';
+import 'package:partner/Screens/FormPage/widgets/register_shop_services.dart';
+import 'package:partner/models/mModel/nm_service.dart';
 import 'package:partner/services/apiService.dart';
 import 'package:riverpod/riverpod.dart';
 

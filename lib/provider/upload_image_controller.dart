@@ -40,7 +40,6 @@ class ImageUploadController extends StateNotifier<AsyncValue<String?>> {
       print(await response.stream.bytesToString());
       throw Exception(await response.stream.bytesToString());
     } catch (e) {
-      print(e);
       rethrow;
     }
   }

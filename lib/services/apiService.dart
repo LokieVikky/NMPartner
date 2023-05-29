@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -14,12 +13,12 @@ import 'package:partner/entity/partnerInfoEntity.dart';
 import 'package:partner/entity/pendingOrderInfo.dart';
 import 'package:partner/entity/shopInfoEntity.dart';
 import 'package:partner/models/mModel/modelItemBrand.dart';
-import 'package:partner/models/mModel/modelItemCategory.dart';
-import 'package:partner/models/mModel/modelItemSubCategory.dart';
+import 'package:partner/models/mModel/nm_category.dart';
+import 'package:partner/models/mModel/nm_sub_category.dart';
 import 'package:partner/values/Constants.dart';
 
 import '../models/mModel/modelCategory.dart';
-import '../models/mModel/modelService.dart';
+import '../models/mModel/nm_service.dart';
 import 'gqlQueries.dart';
 
 final apiProvider = Provider<ApiService>((ref) => ApiService());
@@ -28,23 +27,21 @@ class ApiService {
   static final ApiService _instance = ApiService._internal();
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   IOClient _ioClient = IOClient();
+
   factory ApiService() {
     return _instance;
   }
 
   ApiService._internal() {
     final HttpClient _httpClient = HttpClient();
-    _httpClient.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => true;
+    _httpClient.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
     _ioClient = IOClient(_httpClient);
   }
 
   _getGLClient(String accessToken) {
-    final HttpLink _httpLink = HttpLink(Constants.gqlURL,
-        httpClient: _ioClient,
-        defaultHeaders: {
-          Constants.bearer: accessToken,
-        });
+    final HttpLink _httpLink = HttpLink(Constants.gqlURL, httpClient: _ioClient, defaultHeaders: {
+      Constants.bearer: accessToken,
+    });
     final AuthLink _authLink = AuthLink(
       getToken: () async => '${Constants.bearer} $accessToken',
     );
@@ -67,14 +64,12 @@ class ApiService {
   }
 
   Future<http.Response> getApId(String otp, String phoneNumber) async {
-    final response = await http.post(
-        Uri.parse(Constants.httpURL + 'partner-verify-otp'),
+    final response = await http.post(Uri.parse(Constants.httpURL + 'partner-verify-otp'),
         headers: <String, String>{
           'Content-type': 'application/json',
           'Accept': 'application/json',
         },
-        body: jsonEncode(
-            <String, String>{'phone': '+91' + phoneNumber, 'otp': otp}));
+        body: jsonEncode(<String, String>{'phone': '+91' + phoneNumber, 'otp': otp}));
     print('token -> ' + response.body);
     return response;
   }
@@ -87,14 +82,11 @@ class ApiService {
         throw 'Access token not found';
       } else {
         try {
-          QueryOptions options =
-              queryOptions ?? QueryOptions(document: gql(query));
+          QueryOptions options = queryOptions ?? QueryOptions(document: gql(query));
           GraphQLClient client = _getGLClient(accessToken);
-          QueryResult result =
-          await client.query(options).timeout(Duration(seconds: 10));
+          QueryResult result = await client.query(options).timeout(Duration(seconds: 10));
           if (result.hasException) {
-            throw Exception(
-                result.exception ?? 'GraphQL Query returned an exception');
+            throw Exception(result.exception ?? 'GraphQL Query returned an exception');
           }
           return result;
         } catch (e) {
@@ -109,22 +101,20 @@ class ApiService {
   _getMutationResult(String query, {MutationOptions? mutationOptions}) async {
     try {
       String accessToken = await readAccessToken() ?? '';
-        try {
-          MutationOptions options = mutationOptions ??
-              MutationOptions(
-                document: gql(query),
-              );
-          GraphQLClient client = _getGLClient(accessToken);
-          QueryResult result =
-          await client.mutate(options).timeout(Duration(seconds: 10));
-          if (result.hasException) {
-            throw result.exception.toString();
-          }
-          return result;
-        } catch (e) {
-          rethrow;
+      try {
+        MutationOptions options = mutationOptions ??
+            MutationOptions(
+              document: gql(query),
+            );
+        GraphQLClient client = _getGLClient(accessToken);
+        QueryResult result = await client.mutate(options).timeout(Duration(seconds: 10));
+        if (result.hasException) {
+          throw result.exception.toString();
         }
-
+        return result;
+      } catch (e) {
+        rethrow;
+      }
     } catch (e) {
       print(e);
     }
@@ -132,16 +122,14 @@ class ApiService {
 
   insertShopDetail(dynamic mModel) async {
     try {
-      MutationOptions options =
-      MutationOptions(document: gql(insertShopInfo), variables: {
+      MutationOptions options = MutationOptions(document: gql(insertShopInfo), variables: {
         'name': mModel.shopName,
         'description': mModel.shopDesc,
         'avatar': mModel.shopPics,
         'approved_by_admin': mModel.approvedByAdmin,
         'enabled': mModel.shopEnabled,
       });
-      final QueryResult result =
-      await _getMutationResult(insertShopInfo, mutationOptions: options);
+      final QueryResult result = await _getMutationResult(insertShopInfo, mutationOptions: options);
       return result.hasException;
     } catch (e) {
       rethrow;
@@ -150,8 +138,7 @@ class ApiService {
 
   insertAddressDetail(dynamic mModel) async {
     try {
-      MutationOptions options =
-      MutationOptions(document: gql(query_inserShopAddress), variables: {
+      MutationOptions options = MutationOptions(document: gql(query_inserShopAddress), variables: {
         'type': mModel.type,
         'house_no': mModel.houseNo,
         'apartment_road_area': mModel.street,
@@ -161,9 +148,8 @@ class ApiService {
         'latlng': mModel.latlng,
         'apartment_road_area': mModel.street
       });
-      final QueryResult result = await _getMutationResult(
-          query_inserShopAddress,
-          mutationOptions: options);
+      final QueryResult result =
+          await _getMutationResult(query_inserShopAddress, mutationOptions: options);
       print('GQL DATA -> ' + result.data.toString());
       return result.data;
     } catch (e) {
@@ -173,29 +159,27 @@ class ApiService {
 
   updatePartner(PartnerInfoEntity partnerInfoModel) async {
     try {
-      MutationOptions options = await MutationOptions(
-          document: gql(query_updatePartnerInfo),
-          variables: {
-            'userId': partnerInfoModel.partnerID,
-            'name': partnerInfoModel.partnerName,
-            'avatar': partnerInfoModel.partnerProfilePic,
-            'house_no': partnerInfoModel.partnerFlatNo,
-            'apartment_road_area': partnerInfoModel.partnerStreet,
-            'city': partnerInfoModel.partnerCity,
-            'pincode': partnerInfoModel.partnerPincode,
-            'landmark': partnerInfoModel.partnerLandmark,
-            'latlng': partnerInfoModel.partnerLatlng,
-            'aadhaar_document_number': partnerInfoModel.partnerAadhaarNo,
-            'aadhaar_document_type': "AADHAR",
-            'aadhaar_photo_back': partnerInfoModel.partnerAadhaarBack,
-            'aadhaar_photo_front': partnerInfoModel.partnerAadhaarFront,
-            'pan_document_number': partnerInfoModel.partnerPanNo,
-            'pan_document_type': "PAN",
-            'pan_photo_back': partnerInfoModel.partnerPanBack,
-            'pan_photo_front': partnerInfoModel.partnerPanFront,
-          });
-      final result = await _getMutationResult(query_updatePartnerInfo,
-          mutationOptions: options);
+      MutationOptions options =
+          await MutationOptions(document: gql(query_updatePartnerInfo), variables: {
+        'userId': partnerInfoModel.partnerID,
+        'name': partnerInfoModel.partnerName,
+        'avatar': partnerInfoModel.partnerProfilePic,
+        'house_no': partnerInfoModel.partnerFlatNo,
+        'apartment_road_area': partnerInfoModel.partnerStreet,
+        'city': partnerInfoModel.partnerCity,
+        'pincode': partnerInfoModel.partnerPincode,
+        'landmark': partnerInfoModel.partnerLandmark,
+        'latlng': partnerInfoModel.partnerLatlng,
+        'aadhaar_document_number': partnerInfoModel.partnerAadhaarNo,
+        'aadhaar_document_type': "AADHAR",
+        'aadhaar_photo_back': partnerInfoModel.partnerAadhaarBack,
+        'aadhaar_photo_front': partnerInfoModel.partnerAadhaarFront,
+        'pan_document_number': partnerInfoModel.partnerPanNo,
+        'pan_document_type': "PAN",
+        'pan_photo_back': partnerInfoModel.partnerPanBack,
+        'pan_photo_front': partnerInfoModel.partnerPanFront,
+      });
+      final result = await _getMutationResult(query_updatePartnerInfo, mutationOptions: options);
       print(result);
       return result.data;
     } catch (e) {
@@ -204,12 +188,10 @@ class ApiService {
   }
 
   getCurrentStep(String? partnerid) async {
-    QueryOptions options = QueryOptions(
-        document: gql(query_getCurrentStep),
-        variables: {'partnerId': partnerid});
+    QueryOptions options =
+        QueryOptions(document: gql(query_getCurrentStep), variables: {'partnerId': partnerid});
 
-    final result =
-    await _getQueryResult(query_getCurrentStep, queryOptions: options);
+    final result = await _getQueryResult(query_getCurrentStep, queryOptions: options);
 
     if (result != null) {
       var content = result.data['namma_mechanics_partner'][0];
@@ -226,9 +208,7 @@ class ApiService {
         shopService = content['shops'][0]['shop_services'];
         saveToken(shopId: content['shops'][0]['id']);
       }
-      if (partnerTableData == null ||
-          addressTableData.isEmpty ||
-          documentTableData.isEmpty) {
+      if (partnerTableData == null || addressTableData.isEmpty || documentTableData.isEmpty) {
         return 0;
       } else if (shopName == null) {
         return 1;
@@ -244,23 +224,19 @@ class ApiService {
 
   insertShop(ShopEntity shop) async {
     try {
-      MutationOptions options =
-      MutationOptions(document: gql(insertShopInfo), variables: {
+      MutationOptions options = MutationOptions(document: gql(insertShopInfo), variables: {
         "avatar": shop.avatarUrl,
         "desc": shop.shopDescription,
         "name": shop.shopName,
         "partnerID": shop.partnerId
       });
 
-      var res =
-      await _getMutationResult(insertShopInfo, mutationOptions: options);
+      var res = await _getMutationResult(insertShopInfo, mutationOptions: options);
 
-      final shopId =
-      await res.data['insert_namma_mechanics_shop']['returning'][0]['id'];
+      final shopId = await res.data['insert_namma_mechanics_shop']['returning'][0]['id'];
 
       if (shopId != null) {
-        MutationOptions options =
-        MutationOptions(document: gql(insertShopAddress), variables: {
+        MutationOptions options = MutationOptions(document: gql(insertShopAddress), variables: {
           'street': shop.street,
           'houseNo': shop.shopNo,
           'city': shop.city,
@@ -269,11 +245,9 @@ class ApiService {
           'landMark': shop.landmark,
           'shopId': shopId,
         });
-        var result = await _getMutationResult(insertShopAddress,
-            mutationOptions: options);
+        var result = await _getMutationResult(insertShopAddress, mutationOptions: options);
         if (result != null) {
-          String addressID = result.data['insert_namma_mechanics_address']
-          ['returning'][0]['id'];
+          String addressID = result.data['insert_namma_mechanics_address']['returning'][0]['id'];
           if (addressID.isNotEmpty) {
             return ShopEntity(shopId: shopId);
           }
@@ -301,44 +275,36 @@ class ApiService {
   }
 
   getSubCategory(List<String> categoryId) async {
-    QueryOptions options = QueryOptions(
-        document: gql(queryGetSubcategory), variables: {'list': categoryId});
-    dynamic result =
-    await _getQueryResult(queryGetSubcategory, queryOptions: options);
+    QueryOptions options =
+        QueryOptions(document: gql(queryGetSubcategory), variables: {'list': categoryId});
+    dynamic result = await _getQueryResult(queryGetSubcategory, queryOptions: options);
 
-    List<SubCategory> mModel = [];
+    List<NMSubCategory> mModel = [];
 
     for (dynamic element in result.data['namma_mechanics_item_sub_category']) {
-      mModel.add(SubCategory(
-          subCategoryId: element['id'],
-          subCategoryName: element['name'],
-          subCategoryIsSelected: false));
+      mModel.add(NMSubCategory(subCategoryId: element['id'], subCategoryName: element['name']));
     }
     print("subCat -> " + mModel.toString());
     return mModel;
   }
 
   getBrands(List<String> subCategoryId) async {
-    QueryOptions options = QueryOptions(
-        document: gql(queryBrands), variables: {'list': subCategoryId});
+    QueryOptions options =
+        QueryOptions(document: gql(queryBrands), variables: {'list': subCategoryId});
     dynamic result = await _getQueryResult(queryBrands, queryOptions: options);
     List<String> brandIds = [];
-    for (dynamic element
-    in result.data['namma_mechanics_item_sub_category_brand']) {
+    for (dynamic element in result.data['namma_mechanics_item_sub_category_brand']) {
       brandIds.add(element['brand_id']);
     }
 
-    QueryOptions brandOptions = QueryOptions(
-        document: gql(quertBrandList), variables: {'list': brandIds});
-    dynamic brandResult =
-    await _getQueryResult(quertBrandList, queryOptions: brandOptions);
+    QueryOptions brandOptions =
+        QueryOptions(document: gql(quertBrandList), variables: {'list': brandIds});
+    dynamic brandResult = await _getQueryResult(quertBrandList, queryOptions: brandOptions);
 
     List<ModelItemBrand> brands = [];
     for (dynamic element in brandResult.data['namma_mechanics_brand']) {
       brands.add(ModelItemBrand(
-          brandId: element['id'],
-          brandName: element['name'],
-          brandIsSelected: false));
+          brandId: element['id'], brandName: element['name'], brandIsSelected: false));
     }
     return brands;
   }
@@ -361,19 +327,18 @@ class ApiService {
     var result = await _getQueryResult(queryServiceList);
     Map<String, ModelService> finalList = {};
     for (dynamic element in result.data['namma_mechanics_service']) {
-      finalList[element['id']] = ModelService(element['name'], element['rate'],
-          element['rate_configurable'], element['id'], false);
+      finalList[element['id']] = ModelService(
+          element['name'], element['rate'], element['rate_configurable'], element['id'], false);
     }
     return finalList;
   }
 
   getOrderList() async {
     String? shopID = await readShopId();
-    QueryOptions options = QueryOptions(document: gql(getPlacedOrdersList),
-        variables: {'shopId': shopID});
+    QueryOptions options =
+        QueryOptions(document: gql(getPlacedOrdersList), variables: {'shopId': shopID});
     // await readShopId()
-    var result =
-    await _getQueryResult(getPlacedOrdersList, queryOptions: options);
+    var result = await _getQueryResult(getPlacedOrdersList, queryOptions: options);
     List<WorkOrder> entities = [];
 
     for (dynamic element in result.data['namma_mechanics_order']) {
@@ -390,28 +355,26 @@ class ApiService {
 
   getPendingOrderInfo(String custId, String orderId) async {
     QueryOptions options = QueryOptions(
-        document: gql(queryCustomerInfo),
-        variables: {'custId': custId, 'orderId': orderId});
+        document: gql(queryCustomerInfo), variables: {'custId': custId, 'orderId': orderId});
 
-    final result =
-    await _getQueryResult(queryCustomerInfo, queryOptions: options);
+    final result = await _getQueryResult(queryCustomerInfo, queryOptions: options);
 
-    if(result != null) {
+    if (result != null) {
       final cust_data = result.data['namma_mechanics_consumer'][0];
       final orderData = result.data['namma_mechanics_consumer'][0]['orders'];
       List<ModelService> orderService = [];
 
-      for(var element in orderData[0]['order_services']) {
-        orderService.add(ModelService(element['shop_service']['name'], element['shop_service']['amount'], false, null, false));
+      for (var element in orderData[0]['order_services']) {
+        orderService.add(ModelService(element['shop_service']['name'],
+            element['shop_service']['amount'], false, null, false));
       }
 
       PendingOrderInfo entity = await PendingOrderInfo(
-        custName: cust_data['name'],
-        customerId: cust_data['id'],
-        custProfile: cust_data['avatar'],
-        orderDescription: orderData[0]['description'],
-        serviceModel: orderService
-      );
+          custName: cust_data['name'],
+          customerId: cust_data['id'],
+          custProfile: cust_data['avatar'],
+          orderDescription: orderData[0]['description'],
+          serviceModel: orderService);
       print(result.toString());
 
       return entity;
@@ -422,8 +385,7 @@ class ApiService {
     QueryOptions options = QueryOptions(
         document: gql(queryGetActionRequired),
         variables: {'shopId': "7bdfde1a-0483-45ce-aa74-4459c60b611d"});
-    final result =
-    await _getQueryResult(queryGetActionRequired, queryOptions: options);
+    final result = await _getQueryResult(queryGetActionRequired, queryOptions: options);
 
     List<WorkOrder> mList = [];
     // for (dynamic element in result.data['namma_mechanics_order']) {
@@ -441,11 +403,9 @@ class ApiService {
 
   getProfileInfo() async {
     QueryOptions options = QueryOptions(
-        document: gql(queryGetProfileInfo),
-        variables: {'partnerId': await readPartnerId()});
+        document: gql(queryGetProfileInfo), variables: {'partnerId': await readPartnerId()});
 
-    QueryResult result =
-    await _getQueryResult(queryGetProfileInfo, queryOptions: options);
+    QueryResult result = await _getQueryResult(queryGetProfileInfo, queryOptions: options);
 
     final partner = await result.data!['namma_mechanics_partner'][0];
     final shop = await partner['shops'][0];
@@ -498,14 +458,11 @@ class ApiService {
 
   changeOrderStatus(String orderId, String status) async {
     MutationOptions options = MutationOptions(
-        document: gql(queryChangeOrderStatus),
-        variables: {'status': status, 'orderId': orderId});
+        document: gql(queryChangeOrderStatus), variables: {'status': status, 'orderId': orderId});
 
-    var result = await _getMutationResult(queryChangeOrderStatus,
-        mutationOptions: options);
+    var result = await _getMutationResult(queryChangeOrderStatus, mutationOptions: options);
 
-    return result.data['update_namma_mechanics_order_status_details']
-    ['returning'][0];
+    return result.data['update_namma_mechanics_order_status_details']['returning'][0];
   }
 
   Future<List<String>> getStatusList() async {
@@ -523,27 +480,24 @@ class ApiService {
   }
 
   insertSubCategory(var map) async {
-    MutationOptions options = MutationOptions(
-        document: gql(queryInsertSubCategory), variables: {'subCatList': map});
+    MutationOptions options =
+        MutationOptions(document: gql(queryInsertSubCategory), variables: {'subCatList': map});
 
-    var result = await _getMutationResult(queryInsertSubCategory,
-        mutationOptions: options);
+    var result = await _getMutationResult(queryInsertSubCategory, mutationOptions: options);
     return result;
   }
 
   insertBrand(List<Map<String, String>> map) async {
-    MutationOptions options = MutationOptions(
-        document: gql(queryInsertBrand), variables: {'brandList': map});
+    MutationOptions options =
+        MutationOptions(document: gql(queryInsertBrand), variables: {'brandList': map});
 
-    var result =
-    await _getMutationResult(queryInsertBrand, mutationOptions: options);
+    var result = await _getMutationResult(queryInsertBrand, mutationOptions: options);
     print(result);
     return result;
   }
 
   updateProfile(ProfileEntity entity) async {
-    MutationOptions options =
-    MutationOptions(document: gql(queryUpdateProfile), variables: {
+    MutationOptions options = MutationOptions(document: gql(queryUpdateProfile), variables: {
       "partnerId": await readPartnerId(),
       "partnerName": entity.partnerInfoEntity!.partnerName,
       "partnerStreet": entity.partnerInfoEntity!.partnerStreet,
@@ -562,8 +516,7 @@ class ApiService {
       "shopLatlng": "0.0",
       "shopPincode": entity.shopEntity!.pincode
     });
-    var result =
-    _getMutationResult(queryUpdateProfile, mutationOptions: options);
+    var result = _getMutationResult(queryUpdateProfile, mutationOptions: options);
 
     return result;
   }
@@ -575,11 +528,10 @@ class ApiService {
       mMap.add(await data.toJson());
     }
 
-    MutationOptions options = MutationOptions(
-        document: gql(queryInsertService), variables: {'list': mMap});
+    MutationOptions options =
+        MutationOptions(document: gql(queryInsertService), variables: {'list': mMap});
 
-    var result =
-    await _getMutationResult(queryInsertService, mutationOptions: options);
+    var result = await _getMutationResult(queryInsertService, mutationOptions: options);
 
     if (result != null) {
       return result.data['insert_namma_mechanics_shop_service']['id'];

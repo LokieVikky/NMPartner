@@ -1,5 +1,5 @@
 import 'package:partner/Screens/ProfilePages/providers/ProfilePageProvider.dart';
-import 'package:partner/models/mModel/modelService.dart';
+import 'package:partner/models/mModel/nm_service.dart';
 import 'package:partner/values/MyColors.dart';
 import 'package:partner/values/MyTextstyle.dart';
 import 'package:flutter/material.dart';

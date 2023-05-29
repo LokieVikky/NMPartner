@@ -19,6 +19,32 @@ mutation mutationInsertShop($apartment_road_area: String = "", $city: String = "
 }
 ''';
 
+  static const String queryGetPartnerInfo = r''' 
+  query MyQuery($_eq: String = "") {
+  namma_mechanics_partner(where: {id: {_eq: $_eq}}) {
+    id
+    avatar
+    name
+    phone
+    addresses {
+      id
+      house_no
+      apartment_road_area
+      city
+      pincode
+      landmark
+    }
+    documents {
+      document_number
+      document_type
+      photo_back
+      photo_front
+    }
+  }
+}
+
+  ''';
+
   static const String query_updatePartnerInfo = r'''
 mutation MyMutation($userId: String = "", $name: String = "", $avatar: String = "",
 $house_no: String = "", $apartment_road_area: String = "", $city: String = "", $pincode: String = "", $landmark: String = "", $latlng: String = "",
@@ -96,6 +122,19 @@ query MyQuery($_eq: uuid = "") {
 
 ''';
 
+  static const String querySubCategories = r''' 
+  query MyQuery($_in: [uuid!] = "") {
+  namma_mechanics_item_sub_category(where: {category_id: {_in: $_in}}) {
+    id
+    name
+    icon
+    description
+    enabled
+    category_id
+  }
+}
+  ''';
+
   static const String queryBrands = r'''
 query MyQuery($_eq: uuid = "") {
   namma_mechanics_item_sub_category_brand(where: {sub_category_id: {_eq: $_eq}}) {
@@ -147,8 +186,23 @@ query MyQuery {
     name
     rate
     rate_configurable
+    description
+    sub_category_id
   }
 }    
+''';
+
+  static const String queryServiceListForSubCategory = r'''
+query MyQuery($_in: [uuid!] = "") {
+  namma_mechanics_service(where: {sub_category_id: {_in: $_in}}) {
+    id
+    name
+    rate
+    rate_configurable
+    description
+    sub_category_id
+  }
+}
 ''';
 
   static const String insertShopInfo = r'''

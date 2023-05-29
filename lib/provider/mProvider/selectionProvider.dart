@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:partner/models/mModel/modelItemBrand.dart';
-import 'package:partner/models/mModel/modelItemCategory.dart';
-import 'package:partner/models/mModel/modelItemSubCategory.dart';
+import 'package:partner/models/mModel/nm_category.dart';
+import 'package:partner/models/mModel/nm_sub_category.dart';
 import 'package:partner/services/apiService.dart';
 
 import '../../models/mModel/modelCategory.dart';
-import '../../models/mModel/modelService.dart';
+import '../../models/mModel/nm_service.dart';
 
 final getAllCategoryNotifierProvider = StateNotifierProvider<GetAllCategoryNotifier, List<ItemCategory>>((ref){
   return GetAllCategoryNotifier(ref);

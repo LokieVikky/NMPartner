@@ -19,14 +19,17 @@ import '../../values/MyTextstyle.dart';
 
 
 
-class PartnerInfo extends ConsumerStatefulWidget {
-  const PartnerInfo({Key? key}) : super(key: key);
+class RegisterPersonalDetails extends ConsumerStatefulWidget {
+  const RegisterPersonalDetails({Key? key}) : super(key: key);
 
   @override
   _PartnerInfoState createState() => _PartnerInfoState();
 }
 
-class _PartnerInfoState extends ConsumerState<PartnerInfo> {
+class _PartnerInfoState extends ConsumerState<RegisterPersonalDetails> {
+
+  PartnerInfoEntity? partnerInfoEntity;
+
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
 
@@ -99,20 +102,22 @@ class _PartnerInfoState extends ConsumerState<PartnerInfo> {
     );
 
     contactNumberController.text = FirebaseAuth.instance.currentUser?.phoneNumber ?? '';
+
+
     return Column(
       children: [
         _buildFormV2(),
         ref.watch(updatePartnerControllerProvider).when(data: (data) {
           return _buildSaveButton(
               child: Text(
-                'SAVE',
+                'NEXT',
                 style: MyTextStyle.button1,
               ),
               onPressed: () => updatePartner());
         }, error: (_, __) {
           return _buildSaveButton(
               child: Text(
-                'SAVE',
+                'NEXT',
                 style: MyTextStyle.button1,
               ),
               onPressed: () => updatePartner());

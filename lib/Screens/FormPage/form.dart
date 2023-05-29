@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:partner/Screens/FormPage/partnerInfo.dart';
-import 'package:partner/Screens/FormPage/shopInfo.dart';
-import 'package:partner/Screens/FormPage/shopType.dart';
+import 'package:partner/Screens/FormPage/register_personal_details.dart';
+import 'package:partner/Screens/FormPage/register_shop_info.dart';
+import 'package:partner/Screens/FormPage/widgets/register_shop_services.dart';
 import 'package:partner/provider/providers.dart';
 import 'package:partner/values/MyColors.dart';
 import 'package:partner/values/MyTextstyle.dart';
@@ -22,6 +22,7 @@ class _FormPageState extends ConsumerState<FormPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(registrationStatusProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.purewhite,
@@ -35,17 +36,42 @@ class _FormPageState extends ConsumerState<FormPage> {
       body: state.when(
         data: (data) {
           data = data ?? 0;
-          return Stepper(
-              currentStep: data == 3 ? 0 : data,
-              controlsBuilder: (context, c) {
-                return SizedBox();
-              },
-              type: StepperType.horizontal,
-              steps: [
-                Step(isActive: data == 0, title: Text('Personal'), content: PartnerInfo()),
-                Step(isActive: data == 1, title: Text('Shop'), content: ShopInfo()),
-                Step(isActive: data == 2, title: Text('Services'), content: ShopType())
-              ]);
+          return StatefulBuilder(
+            builder: (BuildContext context, void Function(void Function()) setState) {
+              return Stepper(
+                // onStepTapped: (int value) {
+                //   setState(() {
+                //     data = value;
+                //   });
+                // },
+                currentStep: data == 3 ? 0 : data!,
+                controlsBuilder: (context, c) {
+                  return Container();
+                },
+                type: StepperType.horizontal,
+                steps: [
+                  Step(
+                    isActive: data == 0,
+                    title: Text('Personal'),
+                    content: RegisterPersonalDetails(),
+                  ),
+                  Step(
+                    isActive: data == 1,
+                    title: Text('Shop'),
+                    content: RegisterShopInfo(),
+                  ),
+                  Step(
+                    isActive: data == 2,
+                    title: Text('Services'),
+                    content: SizedBox(
+                      height: MediaQuery.of(context).size.height - kToolbarHeight - 170,
+                      child: RegisterShopServices(),
+                    ),
+                  )
+                ],
+              );
+            },
+          );
         },
         error: (error, stackTrace) {
           print(stackTrace);

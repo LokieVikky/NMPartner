@@ -13,7 +13,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'package:partner/Screens/FormPage/form.dart';
 import 'package:partner/models/garage/sub_models/addressModel.dart';
-import 'package:partner/models/mModel/modelService.dart';
+import 'package:partner/models/mModel/nm_service.dart';
 import 'package:partner/provider/providers.dart';
 import 'package:partner/provider/update_partner_controller.dart';
 import 'package:partner/provider/update_shop_controller.dart';
@@ -32,14 +32,14 @@ import '../../state/ShopState.dart';
 import '../../values/MyColors.dart';
 import '../../values/MyTextstyle.dart';
 
-class ShopInfo extends ConsumerStatefulWidget {
-  const ShopInfo({Key? key}) : super(key: key);
+class RegisterShopInfo extends ConsumerStatefulWidget {
+  const RegisterShopInfo({Key? key}) : super(key: key);
 
   @override
   _ShopInfoState createState() => _ShopInfoState();
 }
 
-class _ShopInfoState extends ConsumerState<ShopInfo> {
+class _ShopInfoState extends ConsumerState<RegisterShopInfo> {
   final TextEditingController shopNameController = TextEditingController();
   final TextEditingController shopNoController = TextEditingController();
   final TextEditingController streetController = TextEditingController();

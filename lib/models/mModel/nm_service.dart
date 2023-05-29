@@ -2,14 +2,16 @@ import 'package:partner/services/apiService.dart';
 
 class NMService {
   String? id;
+  String? subCategoryId;
   String? name;
   String? rate;
   bool? rateConfigurable;
 
-  NMService({this.id,this.name,this.rate,this.rateConfigurable});
+  NMService({this.id,this.subCategoryId,this.name,this.rate,this.rateConfigurable});
 
   NMService.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    subCategoryId = json['sub_category_id'];
     name = json['name'];
     rate = json['rate'];
     rateConfigurable = json['rate_configurable'];

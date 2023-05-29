@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:partner/Screens/FormPage/form.dart';
-import 'package:partner/Screens/FormPage/shopInfo.dart';
+import 'package:partner/Screens/FormPage/register_shop_info.dart';
 import 'package:partner/Screens/HomePages/homePage.dart';
 import 'package:partner/Screens/LoginPage/loginPage.dart';
 import 'package:partner/Screens/OrderPages/orderConfirm.dart';
@@ -49,7 +49,7 @@ class _MechanicsPartnerState extends ConsumerState<MechanicsPartner> {
         '/editEmployee': (context) => EditEmployee(),
         '/addNewEmployee': (context) => AddNewEmployee(),
         '/editServices': (context) => EditServices(),
-        '/shopInfo': (context) => ShopInfo(),
+        '/shopInfo': (context) => RegisterShopInfo(),
         '/reviewScreen': (context) => AllRevivews([])
       },
       home: Material(

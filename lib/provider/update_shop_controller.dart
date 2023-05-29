@@ -9,11 +9,11 @@ import 'package:partner/entity/partnerInfoEntity.dart';
 import 'package:partner/entity/shopInfoEntity.dart';
 
 final updateShopControllerProvider =
-    StateNotifierProvider<UpdateShopController, AsyncValue<bool?>>((ref) {
+    StateNotifierProvider<UpdateShopController, AsyncValue<String?>>((ref) {
   return UpdateShopController(streamRepository: ref.watch(appRepositoryProvider));
 });
 
-class UpdateShopController extends StateNotifier<AsyncValue<bool?>> {
+class UpdateShopController extends StateNotifier<AsyncValue<String?>> {
   AppRepository streamRepository;
 
   UpdateShopController({required this.streamRepository}) : super(const AsyncData(null));

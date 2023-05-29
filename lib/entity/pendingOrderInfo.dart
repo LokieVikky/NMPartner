@@ -1,4 +1,4 @@
-import 'package:partner/models/mModel/modelService.dart';
+import 'package:partner/models/mModel/nm_service.dart';
 
 class PendingOrderInfo {
   String? custName;
