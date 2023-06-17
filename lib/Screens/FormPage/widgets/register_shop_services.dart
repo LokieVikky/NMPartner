@@ -6,11 +6,11 @@ import 'package:partner/models/mModel/nm_category.dart';
 import 'package:partner/models/mModel/nm_service.dart';
 import 'package:partner/models/mModel/nm_sub_category.dart';
 import 'package:partner/provider/providers.dart';
-import 'package:partner/provider/update_shop_controller.dart';
 import 'package:partner/provider/update_shop_services_controller.dart';
+import 'package:partner/shared/async_value_ui.dart';
 import 'package:partner/shared/custom_widgets.dart';
 import 'package:partner/values/MyColors.dart';
-import 'package:partner/shared/async_value_ui.dart';
+
 import '../../../models/mModel/modelCategory.dart';
 import '../../../provider/mProvider/selectionProvider.dart';
 import '../../../values/MyTextstyle.dart';
@@ -34,11 +34,11 @@ class _ShopCategoryState extends ConsumerState<RegisterShopServices> {
     ref.listen<AsyncValue>(updateShopServicesControllerProvider, (_, state) {
       if (state is AsyncData) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Saved')));
-        // Navigator.of(context).pushReplacement(MaterialPageRoute(
-        //   builder: (context) => HomePage(),
-        // ));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ));
       }
-      ref.refresh(registrationStatusProvider);
+      // ref.refresh(registrationStatusProvider);
       state.showSnackBarOnError(context);
     });
 
@@ -108,21 +108,19 @@ class _ShopCategoryState extends ConsumerState<RegisterShopServices> {
       onTap: state.isLoading
           ? null
           : () {
-              ref.read(shopIdProvider).maybeWhen(
-                  orElse: () {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('Something went wrong')));
-                  },
-                  data: (shopId) {
-                    if (shopId == null) {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('Something went wrong')));
-                      return;
-                    }
-                    ref
-                        .read(updateShopServicesControllerProvider.notifier)
-                        .updateShop(shopId, selectedService);
-                  });
+              ref.read(shopIdProvider).when(
+                    data: (shopId) {
+                      if (shopId == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Something went wrong')));
+                        return;
+                      }
+                      ref.read(updateShopServicesControllerProvider.notifier).updateShop(shopId, selectedService);
+                    },
+                    error: (error, stackTrace) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Something went wrong')));
+                    },
+                    loading: () {},
+                  );
             },
       child: Container(
         height: _height / 15,
@@ -163,9 +161,8 @@ class _ShopCategoryState extends ConsumerState<RegisterShopServices> {
               backgroundColor: Colors.yellow,
               label: Text(category.name ?? ''),
               selected: selectedCategory.contains(category),
-              labelStyle: selectedCategory.contains(category)
-                  ? TextStyle(color: Colors.white)
-                  : TextStyle(color: Colors.black),
+              labelStyle:
+                  selectedCategory.contains(category) ? TextStyle(color: Colors.white) : TextStyle(color: Colors.black),
               onSelected: (bool value) {
                 if (value) {
                   selectedCategory.add(category);
@@ -222,8 +219,7 @@ class _ShopCategoryState extends ConsumerState<RegisterShopServices> {
             }();
           },
           error: (_, __) => AppErrorWidget(
-                onPressed: () =>
-                    ref.refresh(subCategoriesProvider(SubCategoryProviderParam(selectedCategory))),
+                onPressed: () => ref.refresh(subCategoriesProvider(SubCategoryProviderParam(selectedCategory))),
               ),
           loading: () {
             return Center(child: CupertinoActivityIndicator());
@@ -269,8 +265,7 @@ class _ShopCategoryState extends ConsumerState<RegisterShopServices> {
             }();
           },
           error: (_, __) => AppErrorWidget(
-                onPressed: () =>
-                    ref.refresh(servicesProvider(ServicesProviderParam(selectedSubcategory))),
+                onPressed: () => ref.refresh(servicesProvider(ServicesProviderParam(selectedSubcategory))),
               ),
           loading: () {
             return Center(child: CupertinoActivityIndicator());
@@ -300,9 +295,7 @@ class _ShopCategoryState extends ConsumerState<RegisterShopServices> {
     ItemSubCategories item = subCategoryList[index];
     return GestureDetector(
       onTap: () {
-        ref
-            .read(getAllCategoryNotifierProvider.notifier)
-            .selectSubCategory(subCategoryList[index].id);
+        ref.read(getAllCategoryNotifierProvider.notifier).selectSubCategory(subCategoryList[index].id);
       },
       child: Card(
         color: item.isSelected ? Colors.blue : Colors.yellow,

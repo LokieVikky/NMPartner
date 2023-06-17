@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:partner/provider/providers.dart';
+import 'package:partner/shared/custom_widgets.dart';
 import 'package:partner/state/orderListState.dart';
 import 'package:partner/values/MyColors.dart';
 
@@ -15,76 +18,84 @@ class _HomePageContentState extends ConsumerState<HomePageContent> {
   bool isEmpty = true;
   Map<int, int> mMap = {};
 
-  @override
-  void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      // executes after build
-      ref.read(placedOrderListNotifierProvider.notifier).getOrderList();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: 20),
-              margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Pending Orders",
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.purple,
-                  fontFamily: 'Roboto',
+        body: Builder(builder: (context) {
+          return Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 20),
+                margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Pending Orders",
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.purple,
+                    fontFamily: 'Roboto',
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Consumer(builder: (context, ref, child) {
-                OrderListState state =
-                    ref.watch(placedOrderListNotifierProvider);
-                return () {
-                  return state.entity!.when(data: (mList) {
-                    return mList.isNotEmpty
-                        ? SingleChildScrollView(
-                          child: ListView.builder(
-                              itemCount: mList.length,
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (BuildContext context, index) {
-                                return OnGoingOrderCard(
-                                  entity: mList[index],
-                                  screenType: 0,
-                                );
-                              }),
-                        )
-                        : Container(
-                          width: size.width,
-                          child: Column(
-                            children: [
-                              Image.asset('assets/images/noOrder.png'),
-                              Text(
-                                'No Pending Orders',
-                                style: TextStyle(fontSize: 20),
-                              )
-                            ],
+              Expanded(
+                child: Builder(builder: (context) {
+                  return ref.watch(shopIdProvider).when(
+                        data: (shopId) {
+                          if (shopId == null) {
+                            return AppErrorWidget(
+                              errorText: 'Something went wrong',
+                              onPressed: () => ref.refresh(shopIdProvider),
+                            );
+                          }
+                          return ref.watch(ordersProvider(shopId)).when(
+                                data: (data) {
+                                  if (data.isEmpty) {
+                                    return Center(
+                                      child: AppErrorWidget(
+                                        errorText: 'No pending orders',
+                                        onPressed: () => ref.refresh(ordersProvider(shopId)),
+                                      ),
+                                    );
+                                  }
+                                  return ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      return OnGoingOrderCard(
+                                        entity: data[index],
+                                        screenType: 0,
+                                      );
+                                    },
+                                    itemCount: data.length,
+                                  );
+                                },
+                                error: (error, stackTrace) => Center(
+                                  child: AppErrorWidget(
+                                    errorText: error.toString(),
+                                    onPressed: () => ref.refresh(shopIdProvider),
+                                  ),
+                                ),
+                                loading: () => Center(
+                                  child: CupertinoActivityIndicator(),
+                                ),
+                              );
+                        },
+                        error: (error, stackTrace) => Center(
+                          child: AppErrorWidget(
+                            errorText: error.toString(),
+                            onPressed: () => ref.refresh(shopIdProvider),
                           ),
-                        );
-                  }, error: (error, errTxt) {
-                    return Center(child: Text(errTxt.toString()));
-                  }, loading: () {
-                    return Center(child: CircularProgressIndicator());
-                  });
-                }();
-              }),
-            ),
-          ],
-        ),
+                        ),
+                        loading: () => Center(
+                          child: CupertinoActivityIndicator(),
+                        ),
+                      );
+                }),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }

@@ -248,8 +248,6 @@ query MyQuery($shopId : uuid = "") {
     description
     id
     latest_update_on
-    pickup
-    pickup_drop_details_id
     placed_on
     remarks
     shop_id

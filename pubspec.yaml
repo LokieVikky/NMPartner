@@ -60,6 +60,7 @@ dependencies:
   pin_code_fields: ^7.4.0
   open_street_map_search_and_pick: ^0.0.15
   equatable: ^2.0.5
+  flutter_stripe: ^9.2.0
 
 dev_dependencies:
   flutter_test:

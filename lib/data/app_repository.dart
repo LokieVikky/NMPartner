@@ -30,8 +30,7 @@ class AppRepository {
 
   Future<bool> insertShopDetail(dynamic mModel) async {
     try {
-      final QueryResult result =
-          await _appGraphQLClient.mutate(query: GQLQueries.insertShopInfo, variables: {
+      final QueryResult result = await _appGraphQLClient.mutate(query: GQLQueries.insertShopInfo, variables: {
         'name': mModel.shopName,
         'description': mModel.shopDesc,
         'avatar': mModel.shopPics,
@@ -52,8 +51,7 @@ class AppRepository {
 
   Future<bool> insertAddressDetail(dynamic mModel) async {
     try {
-      final QueryResult result =
-          await _appGraphQLClient.mutate(query: GQLQueries.query_inserShopAddress, variables: {
+      final QueryResult result = await _appGraphQLClient.mutate(query: GQLQueries.query_inserShopAddress, variables: {
         'type': mModel.type,
         'house_no': mModel.houseNo,
         'apartment_road_area': mModel.street,
@@ -84,8 +82,7 @@ class AppRepository {
       if (result.data == null) {
         throw Exception('Unable to load categories');
       }
-      return (result.data?['namma_mechanics_item_category']?[0])
-          .map((e) => PartnerInfoEntity.fromJson(e));
+      return (result.data?['namma_mechanics_item_category']?[0]).map((e) => PartnerInfoEntity.fromJson(e));
     } catch (e) {
       rethrow;
     }
@@ -112,8 +109,8 @@ class AppRepository {
         'pan_photo_back': partnerInfoModel.partnerPanBack,
         'pan_photo_front': partnerInfoModel.partnerPanFront,
       };
-      final QueryResult result = await _appGraphQLClient.mutate(
-          query: GQLQueries.query_updatePartnerInfo, variables: variables);
+      final QueryResult result =
+          await _appGraphQLClient.mutate(query: GQLQueries.query_updatePartnerInfo, variables: variables);
       if (result.hasException) {
         throw Exception(result.exception.toString());
       }
@@ -135,8 +132,7 @@ class AppRepository {
         "partnerID": shopEntity.partnerId
       };
 
-      final QueryResult result =
-          await _appGraphQLClient.mutate(query: GQLQueries.insertShopInfo, variables: variables);
+      final QueryResult result = await _appGraphQLClient.mutate(query: GQLQueries.insertShopInfo, variables: variables);
       if (result.hasException) {
         throw Exception(result.exception.toString());
       }
@@ -151,8 +147,8 @@ class AppRepository {
           'landMark': shopEntity.landmark,
           'shopId': shopId,
         };
-        final QueryResult result2 = await _appGraphQLClient.mutate(
-            query: GQLQueries.insertShopAddress, variables: variables);
+        final QueryResult result2 =
+            await _appGraphQLClient.mutate(query: GQLQueries.insertShopAddress, variables: variables);
         if (result2.hasException) {
           throw Exception(result2.exception.toString());
         }
@@ -166,8 +162,8 @@ class AppRepository {
 
   Future<String?> getShopId(String? partnerId) async {
     try {
-      final result = await _appGraphQLClient
-          .query(query: GQLQueries.query_getCurrentStep, variables: {'partnerId': partnerId});
+      final result =
+          await _appGraphQLClient.query(query: GQLQueries.query_getCurrentStep, variables: {'partnerId': partnerId});
       if (result.hasException) {
         throw Exception(result.exception.toString());
       }
@@ -187,8 +183,8 @@ class AppRepository {
 
   Future<int?> getCurrentStep(String? partnerId) async {
     try {
-      final result = await _appGraphQLClient
-          .query(query: GQLQueries.query_getCurrentStep, variables: {'partnerId': partnerId});
+      final result =
+          await _appGraphQLClient.query(query: GQLQueries.query_getCurrentStep, variables: {'partnerId': partnerId});
       if (result.hasException) {
         throw Exception(result.exception.toString());
       }
@@ -213,7 +209,8 @@ class AppRepository {
         return 0;
       } else if (shopName == null) {
         return 1;
-      } else if (shopCategory.isEmpty || shopService.isEmpty) {
+        // } else if (shopCategory.isEmpty || shopService.isEmpty) {
+      } else if (shopService.isEmpty) {
         return 2;
       } else {
         return 3;
@@ -225,8 +222,7 @@ class AppRepository {
 
   Future<bool> insertShop(ShopEntity shop) async {
     try {
-      QueryResult result =
-          await _appGraphQLClient.mutate(query: GQLQueries.insertShopInfo, variables: {
+      QueryResult result = await _appGraphQLClient.mutate(query: GQLQueries.insertShopInfo, variables: {
         "avatar": shop.avatarUrl,
         "desc": shop.shopDescription,
         "name": shop.shopName,
@@ -254,8 +250,7 @@ class AppRepository {
   }
 
   Future<bool> insertShopAddress({required ShopEntity shop, required shopId}) async {
-    QueryResult result =
-        await _appGraphQLClient.mutate(query: GQLQueries.insertShopAddress, variables: {
+    QueryResult result = await _appGraphQLClient.mutate(query: GQLQueries.insertShopAddress, variables: {
       'street': shop.street,
       'houseNo': shop.shopNo,
       'city': shop.city,
@@ -282,55 +277,47 @@ class AppRepository {
       if (result.data == null) {
         throw Exception('Unable to load categories');
       }
-      return (result.data?['namma_mechanics_item_category'] as List)
-          .map((e) => NMCategory.fromJson(e))
-          .toList();
+      return (result.data?['namma_mechanics_item_category'] as List).map((e) => NMCategory.fromJson(e)).toList();
     } catch (e) {
       rethrow;
     }
   }
 
   Future<List<NMSubCategory>> getSubCategory({required String categoryId}) async {
-    QueryResult result = await _appGraphQLClient
-        .query(query: GQLQueries.queryGetSubcategory, variables: {'_eq': categoryId});
+    QueryResult result =
+        await _appGraphQLClient.query(query: GQLQueries.queryGetSubcategory, variables: {'_eq': categoryId});
     if (result.hasException) {
       throw Exception(result.exception.toString());
     }
     if (result.data == null) {
       throw Exception('Unable to load sub categories');
     }
-    return (result.data?['namma_mechanics_item_sub_category'] as List)
-        .map((e) => NMSubCategory.fromJson(e))
-        .toList();
+    return (result.data?['namma_mechanics_item_sub_category'] as List).map((e) => NMSubCategory.fromJson(e)).toList();
   }
 
   Future<List<NMSubCategory>> getSubCategories({required List<String> categoryIds}) async {
-    QueryResult result = await _appGraphQLClient
-        .query(query: GQLQueries.querySubCategories, variables: {'_in': categoryIds});
+    QueryResult result =
+        await _appGraphQLClient.query(query: GQLQueries.querySubCategories, variables: {'_in': categoryIds});
     if (result.hasException) {
       throw Exception(result.exception.toString());
     }
     if (result.data == null) {
       throw Exception('Unable to load sub categories');
     }
-    return (result.data?['namma_mechanics_item_sub_category'] as List)
-        .map((e) => NMSubCategory.fromJson(e))
-        .toList();
+    return (result.data?['namma_mechanics_item_sub_category'] as List).map((e) => NMSubCategory.fromJson(e)).toList();
   }
 
   Future<List<Brand>> getBrands({required String subCategoryId}) async {
     print(subCategoryId);
-    QueryResult result = await _appGraphQLClient
-        .query(query: GQLQueries.queryBrands, variables: {'_eq': subCategoryId});
+    QueryResult result =
+        await _appGraphQLClient.query(query: GQLQueries.queryBrands, variables: {'_eq': subCategoryId});
     if (result.hasException) {
       throw Exception(result.exception.toString());
     }
     if (result.data == null) {
       throw Exception('Unable to load brands');
     }
-    return (result.data?['namma_mechanics_item_sub_category_brand'] as List)
-        .map((e) => Brand.fromJson(e))
-        .toList();
+    return (result.data?['namma_mechanics_item_sub_category_brand'] as List).map((e) => Brand.fromJson(e)).toList();
   }
 
   Future<List<NMService>> getServices({List<String>? subCategoryIds}) async {
@@ -340,8 +327,8 @@ class AppRepository {
         query: GQLQueries.queryServiceList,
       );
     } else {
-      result = await _appGraphQLClient.query(
-          query: GQLQueries.queryServiceListForSubCategory, variables: {'_in': subCategoryIds});
+      result = await _appGraphQLClient
+          .query(query: GQLQueries.queryServiceListForSubCategory, variables: {'_in': subCategoryIds});
     }
     if (result.hasException) {
       throw Exception(result.exception.toString());
@@ -349,29 +336,23 @@ class AppRepository {
     if (result.data == null) {
       throw Exception('Unable to load services');
     }
-    return (result.data?['namma_mechanics_service'] as List)
-        .map((e) => NMService.fromJson(e))
-        .toList();
+    return (result.data?['namma_mechanics_service'] as List).map((e) => NMService.fromJson(e)).toList();
   }
 
   Future<List<WorkOrder>> getOrders({required String shopId}) async {
-    QueryResult result = await _appGraphQLClient
-        .query(query: GQLQueries.queryOrderList, variables: {'shopId': shopId});
+    QueryResult result = await _appGraphQLClient.query(query: GQLQueries.queryOrderList, variables: {'shopId': shopId});
     if (result.hasException) {
       throw Exception(result.exception.toString());
     }
     if (result.data == null) {
       throw Exception('Unable to load orders');
     }
-    return (result.data?['namma_mechanics_order'] as List)
-        .map((e) => WorkOrder.fromJson(e))
-        .toList();
+    return (result.data?['namma_mechanics_order'] as List).map((e) => WorkOrder.fromJson(e)).toList();
   }
 
-  Future<PendingOrderInfo> getPendingOrderInfo(
-      {required String customerId, required String orderId}) async {
-    QueryResult result = await _appGraphQLClient.query(
-        query: GQLQueries.queryCustomerInfo, variables: {'custId': customerId, 'orderId': orderId});
+  Future<PendingOrderInfo> getPendingOrderInfo({required String customerId, required String orderId}) async {
+    QueryResult result = await _appGraphQLClient
+        .query(query: GQLQueries.queryCustomerInfo, variables: {'custId': customerId, 'orderId': orderId});
     if (result.hasException) {
       throw Exception(result.exception.toString());
     }
@@ -392,23 +373,20 @@ class AppRepository {
   }
 
   Future<List<WorkOrder>> getActionRequiredOrders({required String shopId}) async {
-    QueryResult result = await _appGraphQLClient
-        .query(query: GQLQueries.queryGetActionRequired, variables: {'shopId': shopId});
+    QueryResult result =
+        await _appGraphQLClient.query(query: GQLQueries.queryGetActionRequired, variables: {'shopId': shopId});
     if (result.hasException) {
       throw Exception(result.exception.toString());
     }
     if (result.data == null) {
       throw Exception('Unable to load orders');
     }
-    return (result.data?['namma_mechanics_order'] as List)
-        .map((e) => WorkOrder.fromJson(e))
-        .toList();
+    return (result.data?['namma_mechanics_order'] as List).map((e) => WorkOrder.fromJson(e)).toList();
   }
 
   Future<ProfileEntity> getProfileInfo() async {
-    QueryResult result = await _appGraphQLClient.query(
-        query: GQLQueries.queryGetProfileInfo,
-        variables: {'partnerId': _firebaseAuth.currentUser?.uid});
+    QueryResult result = await _appGraphQLClient
+        .query(query: GQLQueries.queryGetProfileInfo, variables: {'partnerId': _firebaseAuth.currentUser?.uid});
     if (result.hasException) {
       throw Exception(result.exception.toString());
     }
@@ -455,18 +433,14 @@ class AppRepository {
     }
 
     ProfileEntity profileEntity = ProfileEntity(
-        partnerInfoEntity: partnerInfoEntity,
-        reviews: reviewList,
-        shopEntity: shopEntity,
-        shopService: serviceList);
+        partnerInfoEntity: partnerInfoEntity, reviews: reviewList, shopEntity: shopEntity, shopService: serviceList);
 
     return profileEntity;
   }
 
   Future<bool> changeOrderStatus(String orderId, String status) async {
-    QueryResult result = await _appGraphQLClient.mutate(
-        query: GQLQueries.queryChangeOrderStatus,
-        variables: {'status': status, 'orderId': orderId});
+    QueryResult result = await _appGraphQLClient
+        .mutate(query: GQLQueries.queryChangeOrderStatus, variables: {'status': status, 'orderId': orderId});
     if (result.hasException) {
       throw Exception(result.exception.toString());
     }
@@ -490,8 +464,8 @@ class AppRepository {
 
 //
   Future<bool> insertBrand(List<Map<String, String>> map) async {
-    QueryResult result = await _appGraphQLClient
-        .mutate(query: GQLQueries.queryInsertBrand, variables: {'brandList': map});
+    QueryResult result =
+        await _appGraphQLClient.mutate(query: GQLQueries.queryInsertBrand, variables: {'brandList': map});
     if (result.hasException) {
       throw Exception(result.exception.toString());
     }
@@ -531,8 +505,7 @@ class AppRepository {
 //
 
   Future<bool> insertService(String shopId, List<NMService> serviceList) async {
-    QueryResult result =
-        await _appGraphQLClient.mutate(query: GQLQueries.queryInsertService, variables: {
+    QueryResult result = await _appGraphQLClient.mutate(query: GQLQueries.queryInsertService, variables: {
       'list': serviceList.map((e) {
         return {
           'service_id': e.id,
