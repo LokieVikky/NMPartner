@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class VehicleInfoHome extends StatelessWidget {
   VehicleInfoHome({required this.vehicle, required this.value});
 
-  final String vehicle, value;
+  final String? vehicle, value;
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +44,14 @@ class VehicleInfoHome extends StatelessWidget {
                 width: 10,
               ),
               Text(
-                vehicle,
+                vehicle ?? '',
                 style: MyTextStyle.text14,
               ),
             ],
           ),
           Container(
             child: Text(
-              value,
+              value ?? '',
               style: MyTextStyle.text14,
             ),
           ),

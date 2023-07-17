@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:partner/Screens/HomePages/widgets/homePageContent.dart';
+import 'package:partner/Screens/HomePages/widgets/pending_orders_page.dart';
 import 'package:partner/Screens/HomePages/widgets/orderHistory.dart';
 import 'package:partner/Screens/ProfilePages/profilePage.dart';
 import 'package:partner/provider/mProvider/commanProviders.dart';
@@ -23,7 +23,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   int currentState = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    HomePageContent(),
+    PendingOrdersPage(),
     orderHistory(),
     ProfilePage(),
   ];

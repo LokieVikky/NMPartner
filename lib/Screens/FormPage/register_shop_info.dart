@@ -22,13 +22,7 @@ import 'package:partner/shared/async_value_ui.dart';
 import 'package:partner/shared/attached_image.dart';
 import 'package:partner/shared/location_picker.dart';
 
-import '../../aws/aws_storage.dart';
 import '../../entity/shopInfoEntity.dart';
-import '../../provider/mProvider/commanProviders.dart';
-import '../../provider/mProvider/imageProvider.dart';
-import '../../provider/mProvider/shopInfoProvider.dart';
-import '../../services/apiService.dart';
-import '../../state/ShopState.dart';
 import '../../values/MyColors.dart';
 import '../../values/MyTextstyle.dart';
 

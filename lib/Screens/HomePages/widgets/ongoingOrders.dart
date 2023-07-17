@@ -88,7 +88,7 @@ class _OnGoingOrderCardState extends ConsumerState<OnGoingOrderCard> {
                 ),
                 VehicleInfoHome(
                   vehicle: "Placed on:",
-                  value: widget.entity!.placedOn!.substring(0, 10),
+                  value: widget.entity?.placedOn?.substring(0, 10),
                 ),
                 widget.screenType == 1
                     ? VehicleInfoHome(

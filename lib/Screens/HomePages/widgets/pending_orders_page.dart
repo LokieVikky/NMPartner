@@ -9,12 +9,12 @@ import 'package:partner/values/MyColors.dart';
 import '../../../provider/mProvider/ordersProvider.dart';
 import 'ongoingOrders.dart';
 
-class HomePageContent extends ConsumerStatefulWidget {
+class PendingOrdersPage extends ConsumerStatefulWidget {
   @override
   _HomePageContentState createState() => _HomePageContentState();
 }
 
-class _HomePageContentState extends ConsumerState<HomePageContent> {
+class _HomePageContentState extends ConsumerState<PendingOrdersPage> {
   bool isEmpty = true;
   Map<int, int> mMap = {};
 
@@ -56,7 +56,10 @@ class _HomePageContentState extends ConsumerState<HomePageContent> {
                                     return Center(
                                       child: AppErrorWidget(
                                         errorText: 'No pending orders',
-                                        onPressed: () => ref.refresh(ordersProvider(shopId)),
+                                        onPressed: () {
+                                          ref.refresh(ordersProvider(shopId));
+                                          //ref.refresh(shopIdProvider);
+                                        },
                                       ),
                                     );
                                   }
