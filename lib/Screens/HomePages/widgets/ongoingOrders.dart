@@ -50,7 +50,7 @@ class _OnGoingOrderCardState extends ConsumerState<OnGoingOrderCard> {
                   style: MyTextStyle.text12,
                 ),
                 Text(
-                  widget.entity!.orderId!.substring(0, 13),
+                  widget.entity!.orderId!,
                   style: MyTextStyle.text13,
                 ),
               ],
@@ -84,7 +84,7 @@ class _OnGoingOrderCardState extends ConsumerState<OnGoingOrderCard> {
               children: [
                 VehicleInfoHome(
                   vehicle: "Amount:",
-                  value: widget.entity!.amount!,
+                  value: widget.entity?.amount??'0',
                 ),
                 VehicleInfoHome(
                   vehicle: "Placed on:",

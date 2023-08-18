@@ -18,7 +18,6 @@ class _HomePageContentState extends ConsumerState<PendingOrdersPage> {
   bool isEmpty = true;
   Map<int, int> mMap = {};
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,31 +51,51 @@ class _HomePageContentState extends ConsumerState<PendingOrdersPage> {
                           }
                           return ref.watch(ordersProvider(shopId)).when(
                                 data: (data) {
-                                  if (data.isEmpty) {
-                                    return Center(
-                                      child: AppErrorWidget(
-                                        errorText: 'No pending orders',
-                                        onPressed: () {
-                                          ref.refresh(ordersProvider(shopId));
-                                          //ref.refresh(shopIdProvider);
-                                        },
-                                      ),
-                                    );
-                                  }
-                                  return ListView.builder(
-                                    itemBuilder: (context, index) {
-                                      return OnGoingOrderCard(
-                                        entity: data[index],
-                                        screenType: 0,
-                                      );
+                                  return RefreshIndicator(
+                                    child: Builder(
+                                      builder: (context) {
+                                        if (data.isEmpty) {
+                                          return CustomScrollView(
+                                            slivers: [
+                                              SliverFillRemaining(
+                                                child: Center(
+                                                  child: AppErrorWidget(
+                                                    errorText:
+                                                        'No pending orders',
+                                                    onPressed: () {
+                                                      ref.invalidate(
+                                                          ordersProvider(
+                                                              shopId));
+                                                      //ref.refresh(shopIdProvider);
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                        return ListView.builder(
+                                          itemBuilder: (context, index) {
+                                            return OnGoingOrderCard(
+                                              entity: data[index],
+                                              screenType: 0,
+                                            );
+                                          },
+                                          itemCount: data.length,
+                                        );
+                                      },
+                                    ),
+                                    onRefresh: () async {
+                                      ref.invalidate(ordersProvider(shopId));
+                                      return Future.value(true);
                                     },
-                                    itemCount: data.length,
                                   );
                                 },
                                 error: (error, stackTrace) => Center(
                                   child: AppErrorWidget(
                                     errorText: error.toString(),
-                                    onPressed: () => ref.refresh(shopIdProvider),
+                                    onPressed: () =>
+                                        ref.refresh(shopIdProvider),
                                   ),
                                 ),
                                 loading: () => Center(
@@ -102,4 +121,5 @@ class _HomePageContentState extends ConsumerState<PendingOrdersPage> {
       ),
     );
   }
+
 }
